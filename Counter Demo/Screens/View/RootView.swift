@@ -1,6 +1,6 @@
 //
 //  RootView.swift
-//  SwiftUI+ComposableArchitecture
+//  Counter_Demo
 //
 //  Created by Yurii.Semeliuk on 23/09/2022.
 //
@@ -9,8 +9,12 @@ import SwiftUI
 
 struct RootView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            NavigationLink(destination: EmptyView()) {
+                Text("")
+                    .padding()
+            }
+        }
     }
 }
 
