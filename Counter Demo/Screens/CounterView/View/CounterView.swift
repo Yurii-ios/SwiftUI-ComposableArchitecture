@@ -10,6 +10,8 @@ import SwiftUI
 struct CounterView: View {
     @ObservedObject var appState: AppState
     @State private var isPrimeSheetPresented: Bool = false
+    @State private var isAlertPrimePresented: Bool = false
+    @State private var alertPrimeNumber: Int?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -24,7 +26,7 @@ struct CounterView: View {
                         PrimeSheetView(appState: appState)
                     }
                     .foregroundColor(.black)
-                 
+                
                 actionView(title: "+", action: {
                     appState.counter += 1
                 })
@@ -33,8 +35,25 @@ struct CounterView: View {
             actionView(title: "Is this prime?", action: {
                 isPrimeSheetPresented = true
             })
-                .padding(.vertical, 5)
-            actionView(title: "What is the \(appState.counter.formatted())th prime?", action: {})
+            .padding(.vertical, 5)
+            .alert("Prime", isPresented: $isAlertPrimePresented) {
+                Button(role: .cancel) {} label: {
+                    Text("OK")
+                }
+
+            } message: {
+                if let alertPrimeNumber {
+                    Text("The \(appState.counter)th prime is \(alertPrimeNumber)")
+                }
+            }
+
+           
+            actionView(title: "What is the \(appState.counter.formatted())th prime?", action: {
+                nthPrime(appState.counter) { prime in
+                    alertPrimeNumber = prime
+                    isAlertPrimePresented = true
+                }
+            })
         }
         .font(.title3)
     }
