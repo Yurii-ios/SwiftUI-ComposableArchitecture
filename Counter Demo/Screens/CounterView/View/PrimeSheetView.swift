@@ -16,7 +16,7 @@ struct PrimeSheetView: View {
                 Text("\(appState.counter) is prime")
                 if appState.favoritePrimes.contains(appState.counter) {
                     Button(action: {
-                        appState.favoritePrimes.removeAll(where: { $0 == appState.counter })
+                        appState.removeFavoritePrime(appState.counter)
                     }) {
                         Text("Remove from favorite primes")
                             .foregroundColor(.blue)
@@ -24,7 +24,7 @@ struct PrimeSheetView: View {
                     .buttonStyle(.automatic)
                 } else {
                     Button(action: {
-                        appState.favoritePrimes.append(appState.counter)
+                        appState.addFavoritePrime(count: appState.counter)
                     }) {
                         Text("Save to favorite primes")
                             .foregroundColor(.blue)

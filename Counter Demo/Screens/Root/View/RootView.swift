@@ -19,7 +19,7 @@ struct RootView: View {
                         .foregroundColor(.black)
                     
                 }
-                NavigationLink(destination: FavoriteView(appState: appState)) {
+                NavigationLink(destination: FavoriteView(favoritePrimesState: .init(state: appState))) {
                     Text("Favorite primes")
                         .font(.body)
                         .foregroundColor(.black)
