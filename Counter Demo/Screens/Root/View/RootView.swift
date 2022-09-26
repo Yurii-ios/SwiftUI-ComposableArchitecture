@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct RootView: View {
-    @ObservedObject var appState: AppState
+    @ObservedObject var store: Store<AppState, AppAction>
     
     var body: some View {
         NavigationView {
             List {
-                NavigationLink(destination: CounterView(appState: appState)) {
+                NavigationLink(destination: CounterView(store: store)) {
                     Text("Counter Demo")
                         .font(.body)
                         .foregroundColor(.black)
                     
                 }
-                NavigationLink(destination: FavoriteView(favoritePrimesState: .init(state: appState))) {
+                NavigationLink(destination: FavoriteView(store: store)) {
                     Text("Favorite primes")
                         .font(.body)
                         .foregroundColor(.black)
@@ -33,8 +33,8 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RootView(appState: AppState())
-                .environmentObject(AppState())
+            RootView(store: Store(initialValue: AppState(), reducer: appReducer))
+                .environmentObject(Store(initialValue: AppState(), reducer: appReducer))
         }
     }
 }

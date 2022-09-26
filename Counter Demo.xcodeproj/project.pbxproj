@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		310E728128DDA2B40077F6C5 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310E728028DDA2B40077F6C5 /* CounterView.swift */; };
+		31632B5928E1968500015B3B /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632B5828E1968500015B3B /* Store.swift */; };
+		31632B5C28E1A0C600015B3B /* CounterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632B5B28E1A0C600015B3B /* CounterAction.swift */; };
+		31632B5F28E1B2CA00015B3B /* CounterReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632B5E28E1B2CA00015B3B /* CounterReducer.swift */; };
 		3166EB0D28DD94BE00C07F34 /*  Counter DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166EB0C28DD94BE00C07F34 /*  Counter DemoApp.swift */; };
 		3166EB0F28DD94BE00C07F34 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166EB0E28DD94BE00C07F34 /* RootView.swift */; };
 		3166EB1128DD94C100C07F34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3166EB1028DD94C100C07F34 /* Assets.xcassets */; };
@@ -23,6 +26,9 @@
 
 /* Begin PBXFileReference section */
 		310E728028DDA2B40077F6C5 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
+		31632B5828E1968500015B3B /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		31632B5B28E1A0C600015B3B /* CounterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterAction.swift; sourceTree = "<group>"; };
+		31632B5E28E1B2CA00015B3B /* CounterReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterReducer.swift; sourceTree = "<group>"; };
 		3166EB0928DD94BE00C07F34 /* Counter Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Counter Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3166EB0C28DD94BE00C07F34 /*  Counter DemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " Counter DemoApp.swift"; sourceTree = "<group>"; };
 		3166EB0E28DD94BE00C07F34 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -73,6 +79,30 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		31632B5728E1967300015B3B /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				31632B5828E1968500015B3B /* Store.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
+		31632B5A28E1A0B100015B3B /* Action */ = {
+			isa = PBXGroup;
+			children = (
+				31632B5B28E1A0C600015B3B /* CounterAction.swift */,
+			);
+			path = Action;
+			sourceTree = "<group>";
+		};
+		31632B5D28E1B2A400015B3B /* Reducer */ = {
+			isa = PBXGroup;
+			children = (
+				31632B5E28E1B2CA00015B3B /* CounterReducer.swift */,
+			);
+			path = Reducer;
+			sourceTree = "<group>";
+		};
 		3166EB0028DD94BE00C07F34 = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +126,9 @@
 				3166EB1A28DD9ADD00C07F34 /* Common */,
 				3177FD6D28DDEE8B002E1103 /* Model */,
 				3177FD6428DDAEDB002E1103 /* State */,
+				31632B5728E1967300015B3B /* Store */,
+				31632B5A28E1A0B100015B3B /* Action */,
+				31632B5D28E1B2A400015B3B /* Reducer */,
 				3166EB1C28DD9AF200C07F34 /* Screens */,
 				3166EB1028DD94C100C07F34 /* Assets.xcassets */,
 				3166EB1228DD94C100C07F34 /* Preview Content */,
@@ -241,12 +274,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31632B5C28E1A0C600015B3B /* CounterAction.swift in Sources */,
 				3166EB0F28DD94BE00C07F34 /* RootView.swift in Sources */,
 				F1EE77D428E0E56400362218 /* FavoritePrimeState.swift in Sources */,
 				3177FD6F28DDEEAB002E1103 /* WolframAlphaModel.swift in Sources */,
 				3177FD6828DDB733002E1103 /* PrimeSheetView.swift in Sources */,
 				3166EB0D28DD94BE00C07F34 /*  Counter DemoApp.swift in Sources */,
+				31632B5F28E1B2CA00015B3B /* CounterReducer.swift in Sources */,
 				F1EE77D028E0A77E00362218 /* User.swift in Sources */,
+				31632B5928E1968500015B3B /* Store.swift in Sources */,
 				310E728128DDA2B40077F6C5 /* CounterView.swift in Sources */,
 				F1EE77D228E0A7C300362218 /* Activity.swift in Sources */,
 				3177FD6C28DDEABE002E1103 /* FavoriteView.swift in Sources */,
