@@ -42,7 +42,7 @@ struct CounterView: View {
                     Text("OK")
                 }
             } message: {
-                if let alertPrimeNumber {
+                if let alertPrimeNumber = alertPrimeNumber {
                     Text("The \(appState.counter)th prime is \(alertPrimeNumber)")
                 }
             }
