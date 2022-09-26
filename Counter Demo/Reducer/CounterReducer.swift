@@ -44,7 +44,9 @@ func counterReducer(state: inout AppState, action: AppAction) {
     }
 }
 
-func combine<Value, Action>(_ first: @escaping (inout Value, Action) -> Void, _ second: @escaping (inout Value, Action) -> Void) -> (inout Value, Action) -> Void {
+func combine<Value, Action>(
+    _ first: @escaping (inout Value, Action) -> Void,
+    _ second: @escaping (inout Value, Action) -> Void) -> (inout Value, Action) -> Void {
     return { value, action in
         first(&value, action)
         second(&value, action)
