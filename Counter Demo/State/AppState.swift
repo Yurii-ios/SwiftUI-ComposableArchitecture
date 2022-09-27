@@ -37,3 +37,15 @@ extension AppState {
         }
     }
 }
+
+extension AppState {
+    var favoritePrimesState: FavoritePrimesState {
+        get {
+            FavoritePrimesState(favoritePrimes: favoritePrimes, activityFeed: activityFeed)
+        }
+        set {
+            favoritePrimes = newValue.favoritePrimes
+            activityFeed = newValue.activityFeed
+        }
+    }
+}
