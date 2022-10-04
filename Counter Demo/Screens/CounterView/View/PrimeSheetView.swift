@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct PrimeSheetView: View {
-    @ObservedObject var appState: AppState
+    @ObservedObject var store: Store<AppState, AppAction>
     
     var body: some View {
         VStack {
-            if isPrime(appState.counter) {
-                Text("\(appState.counter) is prime")
-                if appState.favoritePrimes.contains(appState.counter) {
+            if isPrime(store.value.counter) {
+                Text("\(store.value.counter) is prime")
+                if store.value.favoritePrimes.contains(store.value.counter) {
                     Button(action: {
-                        appState.removeFavoritePrime(appState.counter)
+                        store.send(.primeModal(.removeFavoritePrimeTapped))
+                       // store.value.removeFavoritePrime(store.value.counter)
                     }) {
                         Text("Remove from favorite primes")
                             .foregroundColor(.blue)
@@ -24,7 +25,8 @@ struct PrimeSheetView: View {
                     .buttonStyle(.automatic)
                 } else {
                     Button(action: {
-                        appState.addFavoritePrime(count: appState.counter)
+                        store.send(.primeModal(.saveFavoritesPrimeTapped))
+                        //store.value.addFavoritePrime(count: store.value.counter)
                     }) {
                         Text("Save to favorite primes")
                             .foregroundColor(.blue)
@@ -32,7 +34,7 @@ struct PrimeSheetView: View {
                     .buttonStyle(.automatic)
                 }
             } else {
-                Text("\(appState.counter) is not prime")
+                Text("\(store.value.counter) is not prime")
             }
         }
     }
@@ -50,6 +52,6 @@ struct PrimeSheetView: View {
 
 struct PrimeSheetView_Previews: PreviewProvider {
     static var previews: some View {
-        PrimeSheetView(appState: AppState())
+        PrimeSheetView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
     }
 }

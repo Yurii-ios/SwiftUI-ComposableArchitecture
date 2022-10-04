@@ -10,7 +10,7 @@ import SwiftUI
 struct Counter_DemoApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView(appState: .init())
+            RootView(store: .init(initialValue: AppState(), reducer: logging(activityFeed(appReducer))))
         }
     }
 }
