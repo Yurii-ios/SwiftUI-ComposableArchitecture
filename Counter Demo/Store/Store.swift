@@ -9,7 +9,7 @@ import Foundation
 
 final class Store<Value, Action>: ObservableObject {
     let reducer: (inout Value, Action) -> Void
-    @Published var value: Value
+    @Published private(set) var value: Value
     
     init(initialValue: Value, reducer: @escaping (inout Value, Action) -> Void) {
         self.value = initialValue

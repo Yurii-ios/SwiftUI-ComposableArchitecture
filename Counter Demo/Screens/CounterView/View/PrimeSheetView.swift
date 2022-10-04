@@ -52,6 +52,6 @@ struct PrimeSheetView: View {
 
 struct PrimeSheetView_Previews: PreviewProvider {
     static var previews: some View {
-        PrimeSheetView(store: Store(initialValue: AppState(), reducer: appReducer))
+        PrimeSheetView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
     }
 }

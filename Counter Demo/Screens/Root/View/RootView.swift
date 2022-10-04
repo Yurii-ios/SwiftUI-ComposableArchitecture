@@ -33,8 +33,8 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            RootView(store: Store(initialValue: AppState(), reducer: appReducer))
-                .environmentObject(Store(initialValue: AppState(), reducer: appReducer))
+            RootView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
+                .environmentObject(Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
         }
     }
 }

@@ -75,7 +75,7 @@ struct CounterView: View {
 
 struct CounterView_Previews: PreviewProvider {
     static var previews: some View {
-        CounterView(store: Store(initialValue: AppState(), reducer: appReducer))
-            .environmentObject(Store(initialValue: AppState(), reducer: appReducer))
+        CounterView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
+            .environmentObject(Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
     }
 }

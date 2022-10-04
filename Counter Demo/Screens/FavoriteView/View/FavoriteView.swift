@@ -25,6 +25,6 @@ struct FavoriteView: View {
 
 struct FavoriteView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteView(store: Store(initialValue: AppState(), reducer: appReducer))
+        FavoriteView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
     }
 }

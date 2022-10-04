@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-struct FavoritePrimesState {
-    var favoritePrimes: [Int]
-    var activityFeed: [Activity]
-}
+//struct FavoritePrimesState {
+//    var favoritePrimes: [Int]
+//    var activityFeed: [Activity]
+//}
