@@ -1,10 +1,11 @@
 //
 //  Counter_DemoApp.swift
 //
-//  Created by Yurii.Semeliuk on 23/09/2022.
+//  Created by Yurii.Sameliuk on 23/09/2022.
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct Counter_DemoApp: App {

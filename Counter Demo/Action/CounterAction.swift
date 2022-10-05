@@ -2,10 +2,13 @@
 //  CounterAction.swift
 //  Counter Demo
 //
-//  Created by Yurii.Semeliuk on 26/09/2022.
+//  Created by Yurii.Sameliuk on 26/09/2022.
 //
 
 import Foundation
+import Favoriteprimes
+import Counter
+import PrimeModel
 
 enum AppAction {
     case counter(CounterAction)
@@ -44,18 +47,4 @@ enum AppAction {
             self = .favoritePrimes(newValue)
         }
     }
-}
-
-enum CounterAction {
-    case decrTapped
-    case incrTapped
-}
-
-enum PrimeModalAction {
-    case saveFavoritesPrimeTapped
-    case removeFavoritePrimeTapped
-}
-
-enum FavoritePrimeAction {
-    case deleteFavoritePrimes(IndexSet)
 }
