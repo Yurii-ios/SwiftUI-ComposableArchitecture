@@ -14,16 +14,21 @@ struct RootView: View {
     var body: some View {
         NavigationView {
             List {
-                NavigationLink(destination: CounterView(store: store.view({ appState in
-                    return (appState.counter, appState.favoritePrimes)
-                }))) {
-                    Text("Counter Demo")
-                        .font(.body)
-                        .foregroundColor(.black)
-                    
-                }
-                NavigationLink(destination: FavoriteView(store: store.view({ appState in
+                NavigationLink(destination: CounterView(store: store.view(
+                    value: { appState in
+                        return (appState.counter, appState.favoritePrimes)
+                    }, action: { localAction in
+                        localAction
+                    }))) {
+                        Text("Counter Demo")
+                            .font(.body)
+                            .foregroundColor(.black)
+                        
+                    }
+                NavigationLink(destination: FavoriteView(store: store.view(value: { appState in
                     appState.favoritePrimes
+                }, action: { localAction in
+                    localAction
                 }))) {
                     Text("Favorite primes")
                         .font(.body)

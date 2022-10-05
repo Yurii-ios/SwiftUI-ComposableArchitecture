@@ -28,18 +28,30 @@ public final class Store<Value, Action>: ObservableObject {
     // ((A) -> B) -> ((Store<A, _>) -> Store<B, _>)
     // ((A) -> B) -> ((F<A>) -> F<B>)
     // map: ((A) -> B) -> ((F<A>) -> F<B>)
-    public func view<LocalValue>(_ f: @escaping (Value) -> LocalValue) -> Store<LocalValue, Action> {
-        let localStore = Store<LocalValue, Action>(initialValue: f(self.value), reducer: { localValue, action in
-            self.send(action)
-            localValue = f(self.value)
+    public func view<LocalValue, LocalAction>(value toLocalValue: @escaping (Value) -> LocalValue, action toGlobalAction: @escaping(LocalAction) -> Action) -> Store<LocalValue, LocalAction> {
+        let localStore = Store<LocalValue, LocalAction>(initialValue: toLocalValue(self.value), reducer: { localValue, localAction in
+            self.send(toGlobalAction(localAction))
+            localValue = toLocalValue(self.value)
         })
         
         localStore.cancellable = self.$value.sink { [weak localStore] newValue in
-            localStore?.value = f(newValue)
+            localStore?.value = toLocalValue(newValue)
         }
         
         return localStore
     }
+    
+    // ((LocalAction) -> Action) -> ((Store<_, Action>) -> Store<_, LocalAction>)
+    // ((B) -> A) -> ((Store<A, _>) -> Store<B, _>)
+    // ((B) -> A) -> (F<A>) -> F<B>)
+    // pullback: ((A) -> B) -> (F<B>) -> F<A>)
+//    public func view<LocalAction>(_ f: @escaping (LocalAction) -> Action) -> Store<Value, LocalAction> {
+//        return Store<Value, LocalAction>(initialValue: self.value, reducer: { value, localAction in
+//            //self.send(f(action))
+//            value = self.value
+//        }
+//        )
+//      }
 }
 
 func transform<A, B, Action>(
