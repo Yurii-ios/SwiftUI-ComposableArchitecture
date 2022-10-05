@@ -9,9 +9,9 @@ import SwiftUI
 import ComposableArchitecture
 
 // @ObservedObject var state: AppState ->  @ObservedObject var store: Store<AppState>
-
+typealias CounterViewState = (counter: Int, favoritePrimes: [Int])
 struct CounterView: View {
-    @ObservedObject var store: Store<AppState, AppAction>
+    @ObservedObject var store: Store<CounterViewState, AppAction>
     @State private var isPrimeSheetPresented: Bool = false
     @State private var isAlertPrimePresented: Bool = false
     @State private var alertPrimeNumber: Int?
@@ -23,18 +23,20 @@ struct CounterView: View {
                 actionView(title: "-", action: {
                     if store.value.counter > 0 {
                         store.send(.counter(.decrTapped))
-                    //store.value.counter -= 1
+                        //store.value.counter -= 1
                     }
                 })
                 Text(store.value.counter.formatted())
                     .sheet(isPresented: $isPrimeSheetPresented, onDismiss: nil) {
-                        PrimeSheetView(store: store)
+                        PrimeSheetView(store: store.view({ appState in
+                            return (appState.counter, appState.favoritePrimes)
+                        }))
                     }
                     .foregroundColor(.black)
                 
                 actionView(title: "+", action: {
                     store.send(.counter(.incrTapped))
-                   //store.value.counter += 1
+                    //store.value.counter += 1
                 })
             }
             
@@ -75,8 +77,13 @@ struct CounterView: View {
 }
 
 struct CounterView_Previews: PreviewProvider {
+   private static var store: Store<AppState, AppAction> = .init(initialValue: AppState.init(counter: 0, favoritePrimes: [], loggedInUser: nil, activityFeed: []), reducer: activityFeed(appReducer))
     static var previews: some View {
-        CounterView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
-            .environmentObject(Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
+        CounterView(store: store.view({ appState in
+            return (appState.counter, appState.favoritePrimes)
+        }))
+        .environmentObject(store.view({ appState in
+            return (appState.counter, appState.favoritePrimes)
+        }))
     }
 }

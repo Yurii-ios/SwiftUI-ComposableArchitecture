@@ -5,11 +5,17 @@
 //  Created by Yurii Sameliuk on 04/10/2022.
 //
 
+import Combine
+
 public final class Store<Value, Action>: ObservableObject {
     private let reducer: (inout Value, Action) -> Void
     @Published public private(set) var value: Value
+    private var cancellable: Cancellable?
     
     public init(initialValue: Value, reducer: @escaping (inout Value, Action) -> Void) {
+        // self.objectWillChange // ObservableObjectPublisher
+        // self.$value // Published<Value>.Publisher
+        // self.$value.sink(receiveValue: ((Value) -> Void))
         self.value = initialValue
         self.reducer = reducer
     }
@@ -17,6 +23,30 @@ public final class Store<Value, Action>: ObservableObject {
     public func send(_ action: Action) {
         reducer(&value, action)
     }
+    
+    // ((Value) -> LocalValue) -> ((Store<Value, _>) -> Store<LocalValue, _>
+    // ((A) -> B) -> ((Store<A, _>) -> Store<B, _>)
+    // ((A) -> B) -> ((F<A>) -> F<B>)
+    // map: ((A) -> B) -> ((F<A>) -> F<B>)
+    public func view<LocalValue>(_ f: @escaping (Value) -> LocalValue) -> Store<LocalValue, Action> {
+        let localStore = Store<LocalValue, Action>(initialValue: f(self.value), reducer: { localValue, action in
+            self.send(action)
+            localValue = f(self.value)
+        })
+        
+        localStore.cancellable = self.$value.sink { [weak localStore] newValue in
+            localStore?.value = f(newValue)
+        }
+        
+        return localStore
+    }
+}
+
+func transform<A, B, Action>(
+    _ reducer: (A, Action) -> A,
+    _ f: (A) -> B
+) -> (B, Action) -> B {
+    fatalError()
 }
 
 public func combine<Value, Action>(

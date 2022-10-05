@@ -160,6 +160,7 @@
 
 /* Begin PBXFileReference section */
 		310E728028DDA2B40077F6C5 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
+		3153FEF428EDA08E0005776C /* Counter.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Counter.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		315948AC28EC206F0051B870 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
 		315948AE28EC34CE0051B870 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		31632B5828E1968500015B3B /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
@@ -330,6 +331,7 @@
 		3166EB0028DD94BE00C07F34 = {
 			isa = PBXGroup;
 			children = (
+				3153FEF428EDA08E0005776C /* Counter.playground */,
 				3166EB0B28DD94BE00C07F34 /* Counter Demo */,
 				F14B350D28ECA02400CA04FD /* Counter */,
 				F14B351B28ECA02500CA04FD /* CounterTests */,

@@ -7,9 +7,10 @@
 
 import SwiftUI
 import ComposableArchitecture
+import PrimeModel
 
 struct PrimeSheetView: View {
-    @ObservedObject var store: Store<AppState, AppAction>
+    @ObservedObject var store: Store<PrimeModalState, AppAction>
     
     var body: some View {
         VStack {
@@ -18,7 +19,7 @@ struct PrimeSheetView: View {
                 if store.value.favoritePrimes.contains(store.value.counter) {
                     Button(action: {
                         store.send(.primeModal(.removeFavoritePrimeTapped))
-                       // store.value.removeFavoritePrime(store.value.counter)
+                        // store.value.removeFavoritePrime(store.value.counter)
                     }) {
                         Text("Remove from favorite primes")
                             .foregroundColor(.blue)
@@ -52,7 +53,10 @@ struct PrimeSheetView: View {
 }
 
 struct PrimeSheetView_Previews: PreviewProvider {
+    private static var store: Store<AppState, AppAction> = .init(initialValue: AppState.init(counter: 0, favoritePrimes: [], loggedInUser: nil, activityFeed: []), reducer: activityFeed(appReducer))
     static var previews: some View {
-        PrimeSheetView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
+        PrimeSheetView(store: store.view({ appState in
+            return (appState.primeModal)
+        }))
     }
 }
