@@ -17,10 +17,10 @@
 		3166EB0F28DD94BE00C07F34 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166EB0E28DD94BE00C07F34 /* RootView.swift */; };
 		3166EB1128DD94C100C07F34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3166EB1028DD94C100C07F34 /* Assets.xcassets */; };
 		3166EB1428DD94C100C07F34 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3166EB1328DD94C100C07F34 /* Preview Assets.xcassets */; };
+		31758A7A28EF1EA70092FE5D /* WolframAlphaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6E28DDEEAB002E1103 /* WolframAlphaModel.swift */; };
 		3177FD6628DDAF11002E1103 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6528DDAF11002E1103 /* AppState.swift */; };
 		3177FD6828DDB733002E1103 /* PrimeSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6728DDB733002E1103 /* PrimeSheetView.swift */; };
 		3177FD6C28DDEABE002E1103 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6B28DDEABE002E1103 /* FavoriteView.swift */; };
-		3177FD6F28DDEEAB002E1103 /* WolframAlphaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6E28DDEEAB002E1103 /* WolframAlphaModel.swift */; };
 		F14B351028ECA02500CA04FD /* Counter.docc in Sources */ = {isa = PBXBuildFile; fileRef = F14B350F28ECA02500CA04FD /* Counter.docc */; };
 		F14B351628ECA02500CA04FD /* Counter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F14B350C28ECA02400CA04FD /* Counter.framework */; };
 		F14B351D28ECA02500CA04FD /* CounterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14B351C28ECA02500CA04FD /* CounterTests.swift */; };
@@ -55,6 +55,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		31758A7B28EF1F410092FE5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3166EB0128DD94BE00C07F34 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F14B357228ECA0C100CA04FD;
+			remoteInfo = ComposableArchitecture;
+		};
+		31758A7D28EF1F450092FE5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3166EB0128DD94BE00C07F34 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F14B352E28ECA05B00CA04FD;
+			remoteInfo = PrimeModel;
+		};
 		F14B351728ECA02500CA04FD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3166EB0128DD94BE00C07F34 /* Project object */;
@@ -441,7 +455,6 @@
 		3177FD6D28DDEE8B002E1103 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3177FD6E28DDEEAB002E1103 /* WolframAlphaModel.swift */,
 				F1EE77CF28E0A77D00362218 /* User.swift */,
 				F1EE77D128E0A7C300362218 /* Activity.swift */,
 			);
@@ -453,6 +466,7 @@
 			children = (
 				F14B350E28ECA02400CA04FD /* Counter.h */,
 				F18C33DA28ED7EA800A2D920 /* Counter.swift */,
+				3177FD6E28DDEEAB002E1103 /* WolframAlphaModel.swift */,
 				F14B350F28ECA02500CA04FD /* Counter.docc */,
 			);
 			path = Counter;
@@ -592,6 +606,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				31758A7E28EF1F450092FE5D /* PBXTargetDependency */,
+				31758A7C28EF1F410092FE5D /* PBXTargetDependency */,
 			);
 			name = Counter;
 			productName = Counter;
@@ -875,7 +891,6 @@
 				3166EB0F28DD94BE00C07F34 /* RootView.swift in Sources */,
 				315948AD28EC206F0051B870 /* KeyPath.swift in Sources */,
 				F1EE77D428E0E56400362218 /* FavoritePrimeState.swift in Sources */,
-				3177FD6F28DDEEAB002E1103 /* WolframAlphaModel.swift in Sources */,
 				3177FD6828DDB733002E1103 /* PrimeSheetView.swift in Sources */,
 				3166EB0D28DD94BE00C07F34 /*  Counter DemoApp.swift in Sources */,
 				31632B5F28E1B2CA00015B3B /* CounterReducer.swift in Sources */,
@@ -894,6 +909,7 @@
 			files = (
 				F18C33DC28ED7EA800A2D920 /* Counter.swift in Sources */,
 				F14B351028ECA02500CA04FD /* Counter.docc in Sources */,
+				31758A7A28EF1EA70092FE5D /* WolframAlphaModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -959,6 +975,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		31758A7C28EF1F410092FE5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F14B357228ECA0C100CA04FD /* ComposableArchitecture */;
+			targetProxy = 31758A7B28EF1F410092FE5D /* PBXContainerItemProxy */;
+		};
+		31758A7E28EF1F450092FE5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F14B352E28ECA05B00CA04FD /* PrimeModel */;
+			targetProxy = 31758A7D28EF1F450092FE5D /* PBXContainerItemProxy */;
+		};
 		F14B351828ECA02500CA04FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F14B350B28ECA02400CA04FD /* Counter */;

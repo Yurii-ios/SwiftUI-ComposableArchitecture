@@ -7,6 +7,8 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Favoriteprimes
+import Counter
 
 struct RootView: View {
     @ObservedObject var store: Store<AppState, AppAction>
@@ -18,7 +20,12 @@ struct RootView: View {
                     value: { appState in
                         return (appState.counter, appState.favoritePrimes)
                     }, action: { localAction in
-                        localAction
+                        switch localAction {
+                        case let .counter(action):
+                            return AppAction.counter(action)
+                        case let .primeModal(action):
+                            return AppAction.primeModal(action)
+                        }
                     }))) {
                         Text("Counter Demo")
                             .font(.body)
@@ -28,7 +35,7 @@ struct RootView: View {
                 NavigationLink(destination: FavoriteView(store: store.view(value: { appState in
                     appState.favoritePrimes
                 }, action: { localAction in
-                    localAction
+                    AppAction.favoritePrimes(localAction)
                 }))) {
                     Text("Favorite primes")
                         .font(.body)
