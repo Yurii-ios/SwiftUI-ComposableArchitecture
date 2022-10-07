@@ -20,12 +20,7 @@ struct RootView: View {
                     value: { appState in
                         return (appState.counter, appState.favoritePrimes)
                     }, action: { localAction in
-                        switch localAction {
-                        case let .counter(action):
-                            return AppAction.counter(action)
-                        case let .primeModal(action):
-                            return AppAction.primeModal(action)
-                        }
+                        AppAction.counterView(localAction)
                     }))) {
                         Text("Counter Demo")
                             .font(.body)
