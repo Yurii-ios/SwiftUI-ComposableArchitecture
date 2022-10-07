@@ -2,10 +2,13 @@
 //  AppState.swift
 //  Counter Demo
 //
-//  Created by Yurii.Semeliuk on 23/09/2022.
+//  Created by Yurii.Sameliuk on 23/09/2022.
 //
 
 import Foundation
+import Favoriteprimes
+import PrimeModel
+import Counter
 
 struct AppState {
     var counter = 0
@@ -34,6 +37,18 @@ extension AppState {
     mutating func removeFavoritePrimes(at indexSet: IndexSet) {
         for index in indexSet {
             self.removeFavoritePrime(self.favoritePrimes[index])
+        }
+    }
+}
+
+extension AppState {
+    var counterView: CounterViewState {
+        get {
+            PrimeModalState(counter: counter, favoritePrimes: favoritePrimes)
+        }
+        set {
+            self.counter = newValue.counter
+            self.favoritePrimes = newValue.favoritePrimes
         }
     }
 }
