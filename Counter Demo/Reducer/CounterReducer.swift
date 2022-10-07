@@ -20,7 +20,7 @@ func activityFeed(
     return { state, action in
         // do some computations with state and action
         switch action {
-        case .counterView(.counter):
+        case .counterView(.counter), .favoritePrimes(.loadFavoritePrimes(_)), .favoritePrimes(.saveButtonTapped):
             break
         case .counterView(.primeModal(.removeFavoritePrimeTapped)):
             state.activityFeed.append(.init(timestamp: Date(), type: .removeFavoritePrime(state.counter)))
