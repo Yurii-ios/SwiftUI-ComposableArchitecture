@@ -7,7 +7,15 @@
 
 import Combine
 
-public typealias Effect<Action> = () -> Action?
+struct Parallel<A> {
+  let run: (@escaping (A) -> Void) -> Void
+}
+
+//DispatchQueue.main.async(execute: () -> Void) -> Void
+//UIView.animate(withDuration: TimeInterval, animations: () -> Void) -> Void
+//URLSession.shared.dataTask(with: URL, completionHandler: (Data?, URLResponse?, Error?) -> Void) -> Void
+
+public typealias Effect<Action> = (@escaping (Action) -> Void) -> Void
 public typealias Reducer<Value, Action> = (inout Value, Action) -> [Effect<Action>]
 
 public final class Store<Value, Action>: ObservableObject {
@@ -26,10 +34,17 @@ public final class Store<Value, Action>: ObservableObject {
     public func send(_ action: Action) {
         let effects = reducer(&value, action)
         effects.forEach { effect in
-            if let action = effect() {
-                send(action)
-            }
-        }
+            effect { action in self.send(action) }
+          }
+//        DispatchQueue.global().async {
+//          effects.forEach { effect in
+//            if let action = effect() {
+//              DispatchQueue.main.async {
+//                self.send(action)
+//              }
+//            }
+//          }
+//        }
     }
     
     // ((Value) -> LocalValue) -> ((Store<Value, _>) -> Store<LocalValue, _>
@@ -97,12 +112,11 @@ public func logging<Value, Action>(
     return { value, action in
         let effects = reducer(&value, action)
         let newValue = value
-        return [{
+        return [{ _ in
             print("Action: \(action)")
             print("Value:")
             dump(newValue)
             print("---")
-            return nil
         }] + effects
     }
 }
@@ -117,12 +131,13 @@ public func pullback<LocalValue, GlobalValue, LocalAction, GlobalAction>(
         let localEffects = reducer(&globalValue[keyPath: value], localAction)
         
         return localEffects.map { localEffect in
-            { () -> GlobalAction? in
-                guard let localAction = localEffect() else { return nil }
-                
-                var globalAction = globalAction
-                globalAction[keyPath: action] = localAction
-                return globalAction
+            { callback in
+               // guard let localAction = localEffect() else { return nil }
+                localEffect { localAction in
+                    var globalAction = globalAction
+                    globalAction[keyPath: action] = localAction
+                    callback(globalAction)
+                }
             }
         }
     }

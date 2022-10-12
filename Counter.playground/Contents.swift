@@ -8,7 +8,7 @@ import PlaygroundSupport
 PlaygroundPage.current.liveView = UIHostingController(
   rootView: CounterView(
     store: Store<CounterViewState, CounterViewAction>(
-      initialValue: (0, []),
+        initialValue: CounterViewState(alertPrime: nil, count: 0, favoritePrimes: [], isPrimeButtonDisabled: false),
       reducer: counterViewReducer
     )
   )
