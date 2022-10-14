@@ -16,16 +16,26 @@ struct Parallel<A> {
 //URLSession.shared.dataTask(with: URL, completionHandler: (Data?, URLResponse?, Error?) -> Void) -> Void
 
 //public typealias Effect<Action> = (@escaping (Action) -> Void) -> Void
-public struct Effect<A> {
-    public let run: (@escaping (A) -> Void) -> Void
+//public struct Effect<A> {
+//    public let run: (@escaping (A) -> Void) -> Void
+//
+//    public init(run: @escaping (@escaping (A) -> Void) -> Void) {
+//        self.run = run
+//    }
+//
+//    public func map<B>(_ f: @escaping (A) -> B) -> Effect<B> {
+//        return Effect<B> { callback in self.run { a in callback(f(a)) }
+//        }
+//    }
+//}
+
+public struct Effect<Output>: Publisher {
+    public typealias Failure = Never
     
-    public init(run: @escaping (@escaping (A) -> Void) -> Void) {
-        self.run = run
-    }
+    let publisher: AnyPublisher<Output, Failure>
     
-    public func map<B>(_ f: @escaping (A) -> B) -> Effect<B> {
-        return Effect<B> { callback in self.run { a in callback(f(a)) }
-        }
+    public func receive<S>(subscriber: S) where S : Subscriber, Never == S.Failure, Output == S.Input {
+        publisher.receive(subscriber: subscriber)
     }
 }
 
@@ -34,7 +44,8 @@ public typealias Reducer<Value, Action> = (inout Value, Action) -> [Effect<Actio
 public final class Store<Value, Action>: ObservableObject {
     private let reducer: Reducer<Value, Action>
     @Published public private(set) var value: Value
-    private var cancellable: Cancellable?
+    private var viewCancellable: Cancellable?
+    private var effectCancellables: [AnyCancellable] = []
     
     public init(initialValue: Value, reducer: @escaping Reducer<Value, Action>) {
         // self.objectWillChange // ObservableObjectPublisher
@@ -46,8 +57,14 @@ public final class Store<Value, Action>: ObservableObject {
     
     public func send(_ action: Action) {
         let effects = reducer(&value, action)
+        
         effects.forEach { effect in
-            effect.run(send)
+            var effectCancellable:  AnyCancellable!
+            effectCancellable = effect.sink(receiveCompletion: { _ in
+                self.effectCancellables.removeAll(where: { $0 == effectCancellable })
+            },receiveValue: send)
+            
+            effectCancellables.append(effectCancellable)
         }
         //        DispatchQueue.global().async {
         //          effects.forEach { effect in
