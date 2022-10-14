@@ -15,6 +15,8 @@ struct AppState {
     var favoritePrimes: [Int] = []
     var loggedInUser: User?
     var activityFeed: [Activity] = []
+    var alertPrime: Int? = nil
+    var isPrimeButtonDisabled: Bool = false
     
     //var didChange = PassthroughSubject<Void, Never>()
 }
@@ -44,11 +46,13 @@ extension AppState {
 extension AppState {
     var counterView: CounterViewState {
         get {
-            PrimeModalState(counter: counter, favoritePrimes: favoritePrimes)
+            CounterViewState(alertPrime: alertPrime, count: counter, favoritePrimes: favoritePrimes, isPrimeButtonDisabled: isPrimeButtonDisabled)
         }
         set {
-            self.counter = newValue.counter
+            self.alertPrime  = newValue.alertPrime
+            self.counter = newValue.count
             self.favoritePrimes = newValue.favoritePrimes
+            self.isPrimeButtonDisabled = newValue.isPrimeButtonDisabled
         }
     }
 }

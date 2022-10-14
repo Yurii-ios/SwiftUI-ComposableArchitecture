@@ -42,15 +42,18 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
         
     case .nthPrimeButtonTapped:
         state.isPrimeButtonDisabled = true
-        let counter = state.count
-        return [{ callback in
-            nthPrime(counter) { prime in
-                DispatchQueue.main.async {
-                    callback(.nthPrimeResponce(prime))
-                }
+        return [
+            nthPrime(state.count)
+                .map(CounterAction.nthPrimeResponce)
+                .receive(on: .main)
+//            { callback in
+//            nthPrime(counter) { prime in
+//                DispatchQueue.main.async {
+//                    callback(.nthPrimeResponce(prime))
+//                }
  //              ⬆️ UI will be updated much faster
                 //callback(.nthPrimeResponce(prime)) //  this code is executed in bg thred
-            }
+//            }
             
 //            var p: Int?
 //            let sema = DispatchSemaphore(value: 0)
@@ -60,11 +63,12 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
 //            }
 //            sema.wait()
 //            return.nthPrimeResponce(p)
-        }]
+//        }
+        ]
 
     case let .nthPrimeResponce(prime):
         state.alertPrime = prime
-        state.isPrimeButtonDisabled = true
+        state.isPrimeButtonDisabled = false
         return []
         
     case .alertDissmissButtonTapped:
@@ -81,11 +85,11 @@ public let counterViewReducer = combine(
 
 // @ObservedObject var state: AppState ->  @ObservedObject var store: Store<AppState>
 public struct CounterViewState {
-     var alertPrime: Int?
-     var count: Int
-     var favoritePrimes: [Int]
-     var isPrimeButtonDisabled: Bool
-    
+    public var alertPrime: Int?
+    public var count: Int
+    public var favoritePrimes: [Int]
+    public var isPrimeButtonDisabled: Bool
+                                                                 
     var counter: CounterSate {
         get {
             (self.alertPrime, self.count, self.isPrimeButtonDisabled)
@@ -180,7 +184,7 @@ public struct CounterView: View {
                 isPrimeSheetPresented = true
             })
             .padding(.vertical, 5)
-            .alert("Prime", isPresented: $isAlertPrimePresented) {
+            .alert("Prime", isPresented: Binding.constant(store.value.alertPrime != nil)) {
                 Button(role: .cancel) {
                     store.send(.counter(.alertDissmissButtonTapped))
                 } label: {

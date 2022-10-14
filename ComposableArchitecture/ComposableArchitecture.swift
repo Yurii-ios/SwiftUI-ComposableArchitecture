@@ -8,14 +8,27 @@
 import Combine
 
 struct Parallel<A> {
-  let run: (@escaping (A) -> Void) -> Void
+    let run: (@escaping (A) -> Void) -> Void
 }
 
 //DispatchQueue.main.async(execute: () -> Void) -> Void
 //UIView.animate(withDuration: TimeInterval, animations: () -> Void) -> Void
 //URLSession.shared.dataTask(with: URL, completionHandler: (Data?, URLResponse?, Error?) -> Void) -> Void
 
-public typealias Effect<Action> = (@escaping (Action) -> Void) -> Void
+//public typealias Effect<Action> = (@escaping (Action) -> Void) -> Void
+public struct Effect<A> {
+    public let run: (@escaping (A) -> Void) -> Void
+    
+    public init(run: @escaping (@escaping (A) -> Void) -> Void) {
+        self.run = run
+    }
+    
+    public func map<B>(_ f: @escaping (A) -> B) -> Effect<B> {
+        return Effect<B> { callback in self.run { a in callback(f(a)) }
+        }
+    }
+}
+
 public typealias Reducer<Value, Action> = (inout Value, Action) -> [Effect<Action>]
 
 public final class Store<Value, Action>: ObservableObject {
@@ -34,17 +47,17 @@ public final class Store<Value, Action>: ObservableObject {
     public func send(_ action: Action) {
         let effects = reducer(&value, action)
         effects.forEach { effect in
-            effect { action in self.send(action) }
-          }
-//        DispatchQueue.global().async {
-//          effects.forEach { effect in
-//            if let action = effect() {
-//              DispatchQueue.main.async {
-//                self.send(action)
-//              }
-//            }
-//          }
-//        }
+            effect.run(send)
+        }
+        //        DispatchQueue.global().async {
+        //          effects.forEach { effect in
+        //            if let action = effect() {
+        //              DispatchQueue.main.async {
+        //                self.send(action)
+        //              }
+        //            }
+        //          }
+        //        }
     }
     
     // ((Value) -> LocalValue) -> ((Store<Value, _>) -> Store<LocalValue, _>
@@ -97,12 +110,12 @@ public func combine<Value, Action>(
         //        }
         let effects = reducers.flatMap{ $0(&value, action) }
         return effects
-//        return { () -> Action? in
-//            for effect in effects {
-//                let action = effect()
-//                return action
-//            }
-//        }
+        //        return { () -> Action? in
+        //            for effect in effects {
+        //                let action = effect()
+        //                return action
+        //            }
+        //        }
     }
 }
 
@@ -112,7 +125,7 @@ public func logging<Value, Action>(
     return { value, action in
         let effects = reducer(&value, action)
         let newValue = value
-        return [{ _ in
+        return [ Effect { _ in
             print("Action: \(action)")
             print("Value:")
             dump(newValue)
@@ -131,9 +144,9 @@ public func pullback<LocalValue, GlobalValue, LocalAction, GlobalAction>(
         let localEffects = reducer(&globalValue[keyPath: value], localAction)
         
         return localEffects.map { localEffect in
-            { callback in
-               // guard let localAction = localEffect() else { return nil }
-                localEffect { localAction in
+            Effect { callback in
+                // guard let localAction = localEffect() else { return nil }
+                localEffect.run { localAction in
                     var globalAction = globalAction
                     globalAction[keyPath: action] = localAction
                     callback(globalAction)
