@@ -8,7 +8,7 @@ import PlaygroundSupport
 PlaygroundPage.current.liveView = UIHostingController(
   rootView: CounterView(
     store: Store<CounterViewState, CounterViewAction>(
-      initialValue: (0, []),
+        initialValue: CounterViewState(alertPrime: nil, count: 0, favoritePrimes: [], isPrimeButtonDisabled: false),
       reducer: counterViewReducer
     )
   )
@@ -35,7 +35,16 @@ PlaygroundPage.current.liveView = UIHostingController(
 //  .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
 //)
 
+func compute(_ x: Int) -> Int {
+  let computation = x * x + 1
+  print("Computed \(computation)")
+  return computation
+}
 
+func computeAndPrint(_ x: Int) -> (Int, [String]) {
+  let computation = x * x + 1
+  return (computation, ["Computed \(computation)"])
+}
 
 //import ComposableArchitecture
 //

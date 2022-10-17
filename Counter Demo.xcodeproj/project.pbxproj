@@ -10,6 +10,7 @@
 		310E728128DDA2B40077F6C5 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310E728028DDA2B40077F6C5 /* CounterView.swift */; };
 		315948AD28EC206F0051B870 /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315948AC28EC206F0051B870 /* KeyPath.swift */; };
 		315948AF28EC34CE0051B870 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315948AE28EC34CE0051B870 /* Logging.swift */; };
+		31630DE428F96955008026E2 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31630DE328F96955008026E2 /* Effects.swift */; };
 		31632B5928E1968500015B3B /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632B5828E1968500015B3B /* Store.swift */; };
 		31632B5C28E1A0C600015B3B /* CounterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632B5B28E1A0C600015B3B /* CounterAction.swift */; };
 		31632B5F28E1B2CA00015B3B /* CounterReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632B5E28E1B2CA00015B3B /* CounterReducer.swift */; };
@@ -177,6 +178,7 @@
 		3153FEF428EDA08E0005776C /* Counter.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Counter.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		315948AC28EC206F0051B870 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
 		315948AE28EC34CE0051B870 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		31630DE328F96955008026E2 /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
 		31632B5828E1968500015B3B /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		31632B5B28E1A0C600015B3B /* CounterAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterAction.swift; sourceTree = "<group>"; };
 		31632B5E28E1B2CA00015B3B /* CounterReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterReducer.swift; sourceTree = "<group>"; };
@@ -521,6 +523,7 @@
 			children = (
 				F14B357528ECA0C200CA04FD /* ComposableArchitecture.h */,
 				F14B359428ECB10D00CA04FD /* ComposableArchitecture.swift */,
+				31630DE328F96955008026E2 /* Effects.swift */,
 				F14B357628ECA0C200CA04FD /* ComposableArchitecture.docc */,
 			);
 			path = ComposableArchitecture;
@@ -960,6 +963,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F14B357728ECA0C200CA04FD /* ComposableArchitecture.docc in Sources */,
+				31630DE428F96955008026E2 /* Effects.swift in Sources */,
 				F14B359528ECB10D00CA04FD /* ComposableArchitecture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

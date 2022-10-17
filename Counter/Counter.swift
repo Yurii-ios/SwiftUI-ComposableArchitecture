@@ -14,27 +14,108 @@ import PrimeModel
 public enum CounterAction {
     case decrTapped
     case incrTapped
+    case nthPrimeButtonTapped
+    case nthPrimeResponce(Int?)
+    case alertDissmissButtonTapped
 }
 
-public func counterReducer(state: inout Int, action: CounterAction) {
+public typealias CounterSate = (
+    alertPrime: Int?,
+    count: Int,
+    isPrimeButtonDisabled: Bool
+)
+
+public struct PrimeAler: Identifiable {
+    let prime: Int
+    public var id: Int { self.prime }
+}
+
+public func counterReducer(state: inout CounterSate, action: CounterAction) -> [Effect<CounterAction>] {
     switch action {
     case .decrTapped:
-        state -= 1
+        state.count -= 1
+        return []
         
     case .incrTapped:
-        state += 1
+        state.count += 1
+        return []
+        
+    case .nthPrimeButtonTapped:
+        state.isPrimeButtonDisabled = true
+        return [
+            nthPrime(state.count)
+                .map(CounterAction.nthPrimeResponce)
+                .receive(on: DispatchQueue.main)
+                .eraseToEffect()
+            //            { callback in
+            //            nthPrime(counter) { prime in
+            //                DispatchQueue.main.async {
+            //                    callback(.nthPrimeResponce(prime))
+            //                }
+            //              ⬆️ UI will be updated much faster
+            //callback(.nthPrimeResponce(prime)) //  this code is executed in bg thred
+            //            }
+            
+            //            var p: Int?
+            //            let sema = DispatchSemaphore(value: 0)
+            //            nthPrime(counter) { prime in
+            //                p = prime
+            //                sema.signal()
+            //            }
+            //            sema.wait()
+            //            return.nthPrimeResponce(p)
+            //        }
+        ]
+        
+    case let .nthPrimeResponce(prime):
+        state.alertPrime = prime
+        state.isPrimeButtonDisabled = false
+        return []
+        
+    case .alertDissmissButtonTapped:
+        state.alertPrime = nil // add this line to help fix the bug. when we press the prime button once we cant press it again
+        return []
     }
 }
 
 
-
 public let counterViewReducer = combine(
     pullback(counterReducer, value: \CounterViewState.counter, action: \CounterViewAction.counter),
-    pullback(primeModalReducer, value: \.self, action: \.primeModal)
+    pullback(primeModalReducer, value: \.primeModal, action: \.primeModal)
 )
 
 // @ObservedObject var state: AppState ->  @ObservedObject var store: Store<AppState>
-public typealias CounterViewState = (counter: Int, favoritePrimes: [Int])
+public struct CounterViewState {
+    public var alertPrime: Int?
+    public var count: Int
+    public var favoritePrimes: [Int]
+    public var isPrimeButtonDisabled: Bool
+    
+    var counter: CounterSate {
+        get {
+            (self.alertPrime, self.count, self.isPrimeButtonDisabled)
+        }
+        set {
+            (self.alertPrime, self.count, self.isPrimeButtonDisabled) = newValue
+        }
+    }
+    
+    var primeModal: PrimeModalState {
+        get {
+            (self.count, self.favoritePrimes)
+        }
+        set {
+            (self.count, self.favoritePrimes) = newValue
+        }
+    }
+    
+    public init(alertPrime: Int?, count: Int, favoritePrimes: [Int], isPrimeButtonDisabled: Bool) {
+        self.alertPrime = alertPrime
+        self.count = count
+        self.favoritePrimes = favoritePrimes
+        self.isPrimeButtonDisabled = isPrimeButtonDisabled
+    }
+}
 
 public enum CounterViewAction {
     case counter(CounterAction)
@@ -68,8 +149,8 @@ public struct CounterView: View {
     @ObservedObject var store: Store<CounterViewState, CounterViewAction>
     @State private var isPrimeSheetPresented: Bool = false
     @State private var isAlertPrimePresented: Bool = false
-    @State private var alertPrimeNumber: Int?
-    @State private var isPrimeButtonDisabled: Bool = false
+    //    @State private var alertPrimeNumber: Int?
+    //    @State private var isPrimeButtonDisabled: Bool = false
     
     public init(store: Store<CounterViewState, CounterViewAction>) {
         self.store = store
@@ -79,15 +160,15 @@ public struct CounterView: View {
         VStack(spacing: 0) {
             HStack(spacing: 15) {
                 actionView(title: "-", action: {
-                    if store.value.counter > 0 {
+                    if store.value.count > 0 {
                         store.send(.counter(.decrTapped))
                         //store.value.counter -= 1
                     }
                 })
-                Text(store.value.counter.formatted())
+                Text(store.value.count.formatted())
                     .sheet(isPresented: $isPrimeSheetPresented, onDismiss: nil) {
                         PrimeSheetView(store: store.view(value:{ appState in
-                            return (appState.counter, appState.favoritePrimes)
+                            return (appState.count, appState.favoritePrimes)
                         }, action: { localAction in
                             CounterViewAction.primeModal(localAction)
                         }))
@@ -104,25 +185,27 @@ public struct CounterView: View {
                 isPrimeSheetPresented = true
             })
             .padding(.vertical, 5)
-            .alert("Prime", isPresented: $isAlertPrimePresented) {
-                Button(role: .cancel) {} label: {
+            .alert("Prime", isPresented: Binding.constant(store.value.alertPrime != nil)) {
+                Button(role: .cancel) {
+                    store.send(.counter(.alertDissmissButtonTapped))
+                } label: {
                     Text("OK")
                 }
             } message: {
-                if let alertPrimeNumber = alertPrimeNumber {
-                    Text("The \(store.value.counter)th prime is \(alertPrimeNumber)")
+                if let alertPrimeNumber = store.value.alertPrime {
+                    Text("The \(store.value.count)th prime is \(alertPrimeNumber)")
                 }
             }
             
-            actionView(title: "What is the \(store.value.counter.formatted())th prime?", action: {
-                isPrimeButtonDisabled = true
-                nthPrime(store.value.counter) { prime in
-                    alertPrimeNumber = prime
-                    isPrimeButtonDisabled = false
-                    isAlertPrimePresented = true
-                }
+            actionView(title: "What is the \(store.value.count.formatted())th prime?", action: {
+                store.send(.counter(.nthPrimeButtonTapped))
+                //                isPrimeButtonDisabled = true
+                //                nthPrime(store.value.counter) { prime in
+                //                    alertPrimeNumber = prime
+                //                    isPrimeButtonDisabled = false
+                //                    isAlertPrimePresented = true
             })
-            .disabled(isPrimeButtonDisabled)
+            .disabled(store.value.isPrimeButtonDisabled)
         }
         .font(.title3)
     }

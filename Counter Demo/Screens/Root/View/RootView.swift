@@ -17,9 +17,7 @@ struct RootView: View {
         NavigationView {
             List {
                 NavigationLink(destination: CounterView(store: store.view(
-                    value: { appState in
-                        return (appState.counter, appState.favoritePrimes)
-                    }, action: { localAction in
+                    value: { $0.counterView }, action: { localAction in
                         AppAction.counterView(localAction)
                     }))) {
                         Text("Counter Demo")
