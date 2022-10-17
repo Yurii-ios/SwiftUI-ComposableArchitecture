@@ -34,12 +34,12 @@ public func favoritePrimesReducer(state: inout [Int], action: FavoritePrimeActio
         return [saveEffect(state)]
         
     case .loadButtonTapped:
-        return [loadEffect]
+        return [loadEffect.compactMap { $0 }.eraseToEffect()]
     }
 }
 
 private func saveEffect(_ favoritePrime: [Int]) -> Effect<FavoritePrimeAction> {
-    return Effect { _ in
+    return Effect.fireAndForget {
         let data = try? JSONEncoder().encode(favoritePrime)
         let documentPath =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         let documentsUrl = URL(fileURLWithPath: documentPath)
@@ -49,15 +49,15 @@ private func saveEffect(_ favoritePrime: [Int]) -> Effect<FavoritePrimeAction> {
     }
 }
 
-private let loadEffect = Effect<FavoritePrimeAction> { callback in
+private let loadEffect = Effect<FavoritePrimeAction?>.sync {
     let documentPath =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     let documentsUrl = URL(fileURLWithPath: documentPath)
     let fovoritePrimesURL = documentsUrl.appendingPathComponent("favorite-primes.json")
     
     guard let data = try? Data(contentsOf: fovoritePrimesURL),
-          let favoritePrimes = try? JSONDecoder().decode([Int].self, from: data) else { return }
+          let favoritePrimes = try? JSONDecoder().decode([Int].self, from: data) else { return nil}
     
-    callback(.loadFavoritePrimes(favoritePrimes))
+    return .loadFavoritePrimes(favoritePrimes)
 }
 
 public struct FavoriteView: View {
@@ -90,5 +90,13 @@ public struct FavoriteView: View {
                 }
             }
         }
+    }
+}
+
+extension Effect {
+    static func sync(work: @escaping () -> Output) -> Effect {
+        return Deferred {
+            Just(work())
+        }.eraseToEffect()
     }
 }

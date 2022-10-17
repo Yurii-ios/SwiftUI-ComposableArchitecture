@@ -45,27 +45,28 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
         return [
             nthPrime(state.count)
                 .map(CounterAction.nthPrimeResponce)
-                .receive(on: .main)
-//            { callback in
-//            nthPrime(counter) { prime in
-//                DispatchQueue.main.async {
-//                    callback(.nthPrimeResponce(prime))
-//                }
- //              ⬆️ UI will be updated much faster
-                //callback(.nthPrimeResponce(prime)) //  this code is executed in bg thred
-//            }
+                .receive(on: DispatchQueue.main)
+                .eraseToEffect()
+            //            { callback in
+            //            nthPrime(counter) { prime in
+            //                DispatchQueue.main.async {
+            //                    callback(.nthPrimeResponce(prime))
+            //                }
+            //              ⬆️ UI will be updated much faster
+            //callback(.nthPrimeResponce(prime)) //  this code is executed in bg thred
+            //            }
             
-//            var p: Int?
-//            let sema = DispatchSemaphore(value: 0)
-//            nthPrime(counter) { prime in
-//                p = prime
-//                sema.signal()
-//            }
-//            sema.wait()
-//            return.nthPrimeResponce(p)
-//        }
+            //            var p: Int?
+            //            let sema = DispatchSemaphore(value: 0)
+            //            nthPrime(counter) { prime in
+            //                p = prime
+            //                sema.signal()
+            //            }
+            //            sema.wait()
+            //            return.nthPrimeResponce(p)
+            //        }
         ]
-
+        
     case let .nthPrimeResponce(prime):
         state.alertPrime = prime
         state.isPrimeButtonDisabled = false
@@ -89,7 +90,7 @@ public struct CounterViewState {
     public var count: Int
     public var favoritePrimes: [Int]
     public var isPrimeButtonDisabled: Bool
-                                                                 
+    
     var counter: CounterSate {
         get {
             (self.alertPrime, self.count, self.isPrimeButtonDisabled)
@@ -148,8 +149,8 @@ public struct CounterView: View {
     @ObservedObject var store: Store<CounterViewState, CounterViewAction>
     @State private var isPrimeSheetPresented: Bool = false
     @State private var isAlertPrimePresented: Bool = false
-//    @State private var alertPrimeNumber: Int?
-//    @State private var isPrimeButtonDisabled: Bool = false
+    //    @State private var alertPrimeNumber: Int?
+    //    @State private var isPrimeButtonDisabled: Bool = false
     
     public init(store: Store<CounterViewState, CounterViewAction>) {
         self.store = store
