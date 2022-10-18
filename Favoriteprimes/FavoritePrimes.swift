@@ -38,6 +38,38 @@ public func favoritePrimesReducer(state: inout [Int], action: FavoritePrimeActio
     }
 }
 
+//struct Environment {
+//    var date: () -> Date
+//}
+//
+//extension Environment {
+//    static let live = Environment(date: Date.init)
+//}
+//
+//extension Environment {
+//    static let moc = Environment(date: { Date.init(timeIntervalSince1970: 1234567890) } )
+//}
+//
+//var current = Environment.live
+//
+//struct GitHubClient {
+//  var fetchRepos: (@escaping (Result<[Repo], Error>) -> Void) -> Void
+//
+//  struct Repo: Decodable {
+//    var archived: Bool
+//    var description: String?
+//    var htmlUrl: URL
+//    var name: String
+//    var pushedAt: Date?
+//  }
+//}
+//
+//#if DEBUG
+//var Current = Environment.live
+//#else
+//let Current = Environment.live
+//#endif
+
 private func saveEffect(_ favoritePrime: [Int]) -> Effect<FavoritePrimeAction> {
     return Effect.fireAndForget {
         let data = try? JSONEncoder().encode(favoritePrime)
