@@ -1247,6 +1247,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.Counter;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1278,6 +1279,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.Counter;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1301,7 +1303,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Debug;
 		};
@@ -1320,7 +1322,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Release;
 		};
@@ -1345,11 +1347,13 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.PrimeModel;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = PrimeModel;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"TEST_HOST[sdk=iphonesimulator*]" = "";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1376,11 +1380,13 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.PrimeModel;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = PrimeModel;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"TEST_HOST[sdk=iphonesimulator15.5]" = "";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1401,7 +1407,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Debug;
 		};
@@ -1420,7 +1426,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Release;
 		};
@@ -1447,6 +1453,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.Favoriteprimes;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1478,6 +1485,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.Favoriteprimes;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1501,7 +1509,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Debug;
 		};
@@ -1520,7 +1528,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Release;
 		};
@@ -1547,6 +1555,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.ComposableArchitecture;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1578,6 +1587,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Yurii.Sameliuk.ComposableArchitecture;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1601,7 +1611,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Debug;
 		};
@@ -1620,7 +1630,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Counter Demo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Counter Demo.app/Counter Demo";
 			};
 			name = Release;
 		};

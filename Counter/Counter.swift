@@ -85,7 +85,7 @@ public let counterViewReducer = combine(
 )
 
 // @ObservedObject var state: AppState ->  @ObservedObject var store: Store<AppState>
-public struct CounterViewState {
+public struct CounterViewState: Equatable {
     public var alertPrime: Int?
     public var count: Int
     public var favoritePrimes: [Int]
