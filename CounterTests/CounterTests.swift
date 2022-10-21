@@ -7,8 +7,13 @@
 
 import XCTest
 @testable import Counter
+import Combine
 
 final class CounterTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        Current = .mock
+    }
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -33,6 +38,10 @@ final class CounterTests: XCTestCase {
     }
     
     func testNthPrimeButtonHappyFlow() {
+        Current.nthPrime = { _ in .sync {
+            17
+        } }
+        
         var state = CounterViewState(
             alertPrime: nil,
             count: 2,
@@ -53,12 +62,25 @@ final class CounterTests: XCTestCase {
         )
         XCTAssertEqual(effects.count, 1)
         
-        effects = counterViewReducer(&state, .counter(.nthPrimeResponce(3)))
+        var nextAction: CounterViewAction!
+        let receivedCompletion = expectation(description: "receivedCompletion")
+        effects[0].sink(
+            receiveCompletion: { _ in
+                receivedCompletion.fulfill()
+            }, receiveValue: { action in
+                // print(action)
+                XCTAssertEqual(action, .counter(.nthPrimeResponce(17)))
+                nextAction = action
+            })
+        
+        wait(for: [receivedCompletion], timeout: 0.01)
+        
+        effects = counterViewReducer(&state, nextAction)
         
         XCTAssertEqual(
             state,
             CounterViewState(
-                alertPrime: 3,
+                alertPrime: 17,
                 count: 2,
                 favoritePrimes: [3, 5],
                 isPrimeButtonDisabled: false
@@ -80,6 +102,8 @@ final class CounterTests: XCTestCase {
     }
     
     func testNthPrimeButtonUnhappyFlow() {
+        Current.nthPrime = { _ in .sync { nil }}
+        
         var state = CounterViewState(
             alertPrime: nil,
             count: 2,
@@ -100,7 +124,22 @@ final class CounterTests: XCTestCase {
         )
         XCTAssertEqual(effects.count, 1)
         
-        effects = counterViewReducer(&state, .counter(.nthPrimeResponce(nil)))
+        var nextAction: CounterViewAction!
+        let receivedCompletion = expectation(description: "receivedCompletion")
+        effects[0].sink(
+            receiveCompletion: { _ in
+                receivedCompletion.fulfill()
+            }, receiveValue: { action in
+                // print(action)
+                XCTAssertEqual(action, .counter(.nthPrimeResponce(nil)))
+                nextAction = action
+            })
+        
+        wait(for: [receivedCompletion], timeout: 0.01)
+        
+        effects = counterViewReducer(&state, nextAction)
+        
+        //effects = counterViewReducer(&state, .counter(.nthPrimeResponce(nil)))
         
         XCTAssertEqual(
             state,

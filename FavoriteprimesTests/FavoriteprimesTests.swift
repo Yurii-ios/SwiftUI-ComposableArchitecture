@@ -9,6 +9,10 @@ import XCTest
 @testable import Favoriteprimes
 
 final class FavoriteprimesTests: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+        Current = .mock
+    }
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -28,15 +32,27 @@ final class FavoriteprimesTests: XCTestCase {
     }
     
     func testSaveButtonTapped() {
+        var didSave = false
+        
+        Current.fileClient.save = { _, _ in
+                .fireAndForget {
+                    didSave = true
+                }
+        }
+        
         var state = [2, 3, 5, 7]
         
         let effects = favoritePrimesReducer(state: &state, action: .saveButtonTapped)
         
         XCTAssertEqual(state, [2, 3, 5, 7])
         XCTAssertEqual(effects.count, 1)
+        
+        effects[0].sink { _ in XCTFail() }
+        XCTAssert(didSave)
     }
     
-    func testLoadButtonTapped() {
+    func testLoadFavoritePrimesFlow() {
+        Current.fileClient.load = { _ in .sync { try! JSONEncoder().encode([2, 31]) } }
         var state = [2, 3, 5, 7]
         
         var effects = favoritePrimesReducer(state: &state, action: .loadButtonTapped)
@@ -44,7 +60,18 @@ final class FavoriteprimesTests: XCTestCase {
         XCTAssertEqual(state, [2, 3, 5, 7])
         XCTAssertEqual(effects.count, 1)
         
-        effects = favoritePrimesReducer(state: &state, action: .loadFavoritePrimes([2, 31]))
+        var nextAction: FavoritePrimeAction!
+        let recivedCompletion = self.expectation(description: "recivedCompletion")
+        _ = effects[0].sink(receiveCompletion: { _ in
+            recivedCompletion.fulfill()
+        }, receiveValue: { action in
+            //print(action)
+            XCTAssertEqual(action, .loadFavoritePrimes([2, 31]))
+            nextAction = action
+        })
+        wait(for: [recivedCompletion], timeout: 0)
+        
+        effects = favoritePrimesReducer(state: &state, action: nextAction)
         
         XCTAssertEqual(state, [2, 31])
         XCTAssert(effects.isEmpty)

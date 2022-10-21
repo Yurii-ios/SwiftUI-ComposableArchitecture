@@ -1,29 +1,40 @@
 import ComposableArchitecture
-import Favoriteprimes
+@testable import Favoriteprimes
 import PrimeModel
-import Counter
+@testable import Counter
 import SwiftUI
 import PlaygroundSupport
 
-PlaygroundPage.current.liveView = UIHostingController(
-  rootView: CounterView(
-    store: Store<CounterViewState, CounterViewAction>(
-        initialValue: CounterViewState(alertPrime: nil, count: 0, favoritePrimes: [], isPrimeButtonDisabled: false),
-      reducer: counterViewReducer
-    )
-  )
-  .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-)
-
 //PlaygroundPage.current.liveView = UIHostingController(
-//  rootView: FavoriteView(
-//    store: Store<[Int], FavoritePrimeAction>(
-//      initialValue: [2,3,4,5],
-//      reducer: favoritePrimesReducer
+//  rootView: CounterView(
+//    store: Store<CounterViewState, CounterViewAction>(
+//        initialValue: CounterViewState(alertPrime: nil, count: 0, favoritePrimes: [], isPrimeButtonDisabled: false),
+//      reducer: counterViewReducer
 //    )
 //  )
 //  .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
 //)
+
+//Current = .mock
+//Current.fileClient.load = { _ in
+//  Effect.sync { try! JSONEncoder().encode(Array(1...100)) }
+//}
+
+Current = .mock
+Current.nthPrime = { _ in .sync {
+    65757678768678
+}
+}
+
+PlaygroundPage.current.liveView = UIHostingController(
+  rootView: FavoriteView(
+    store: Store<[Int], FavoritePrimeAction>(
+      initialValue: [2,3,4,5],
+      reducer: favoritePrimesReducer
+    )
+  )
+  .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+)
 
 //PlaygroundPage.current.liveView = UIHostingController(
 //  rootView: PrimeSheetView(
