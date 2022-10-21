@@ -126,7 +126,7 @@ public struct CounterViewState: Equatable {
         }
     }
     
-    public init(alertPrime: Int?, count: Int, favoritePrimes: [Int], isPrimeButtonDisabled: Bool) {
+    public init(alertPrime: Int? = nil, count: Int = 0, favoritePrimes: [Int] = [], isPrimeButtonDisabled: Bool = false) {
         self.alertPrime = alertPrime
         self.count = count
         self.favoritePrimes = favoritePrimes

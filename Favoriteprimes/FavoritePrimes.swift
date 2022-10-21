@@ -63,24 +63,37 @@ struct FileClient {
 }
 
 extension FileClient {
-    static let live = FileClient { fileName, data in
-        return Effect.fireAndForget {
-            let documentPath =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-            let documentsUrl = URL(fileURLWithPath: documentPath)
-            let fovoritePrimesURL = documentsUrl.appendingPathComponent(fileName)
-            try! data.write(to: fovoritePrimesURL)
-            print("data: \(String(describing: data)) was saved")
-        }
-    } load: { fileName -> Effect<Data?> in
-        Effect<Data?>.sync {
-            let documentPath =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-            let documentsUrl = URL(fileURLWithPath: documentPath)
-            let fovoritePrimesURL = documentsUrl.appendingPathComponent(fileName)
-            
-            return try? Data(contentsOf: fovoritePrimesURL)
-        }
-    }
+    static let userDefaults = FileClient(
+        save: { fileName, data in
+            return .fireAndForget {
+                UserDefaults.standard.set(data, forKey: "FileClient:\(fileName)")
+            }
+        },
+        load: { fileName -> Effect<Data?> in
+                .sync {
+                    UserDefaults.standard.data(forKey: "FileClient:\(fileName)")
+                }
+        })
 }
+//extension FileClient {
+//    static let live = FileClient { fileName, data in
+//        return Effect.fireAndForget {
+//            let documentPath =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+//            let documentsUrl = URL(fileURLWithPath: documentPath)
+//            let fovoritePrimesURL = documentsUrl.appendingPathComponent(fileName)
+//            try! data.write(to: fovoritePrimesURL)
+//            print("data: \(String(describing: data)) was saved")
+//        }
+//    } load: { fileName -> Effect<Data?> in
+//        Effect<Data?>.sync {
+//            let documentPath =  NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+//            let documentsUrl = URL(fileURLWithPath: documentPath)
+//            let fovoritePrimesURL = documentsUrl.appendingPathComponent(fileName)
+//
+//            return try? Data(contentsOf: fovoritePrimesURL)
+//        }
+//    }
+//}
 
 // (Never) -> A
 // func absurd<A>(_ never: Never) -> A {
@@ -94,7 +107,7 @@ struct FavoritePrimesEnvironment {
 }
 
 extension FavoritePrimesEnvironment {
-    static let live = FavoritePrimesEnvironment(fileClient: .live)
+    static let live = FavoritePrimesEnvironment(fileClient: .userDefaults)
 }
 
 var Current = FavoritePrimesEnvironment.live
