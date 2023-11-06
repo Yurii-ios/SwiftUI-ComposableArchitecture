@@ -1,13 +1,5 @@
-//
-//  ComposableArchitecture.swift
-//  
-//
-//  Created by Yurii Sameliuk on 04/10/2022.
-//
-
 import Combine
-import Foundation
-import UIKit
+import SwiftUI
 
 struct Parallel<A> {
     let run: (@escaping (A) -> Void) -> Void

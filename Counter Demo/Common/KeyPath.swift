@@ -1,10 +1,3 @@
-//
-//  KeyPath.swift
-//  Counter Demo
-//
-//  Created by Yurii.Semeliuk on 04/10/2022.
-//
-
 import Foundation
 
 struct _KeyPath<Root, Value> {

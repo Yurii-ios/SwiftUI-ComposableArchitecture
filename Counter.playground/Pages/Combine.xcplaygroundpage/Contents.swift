@@ -88,3 +88,11 @@ currentValue.send(1729)
 // currentValue 1729
 // passthrough 42
 // currentValue 1729
+
+//extension ViewBuilder {
+//    public static func buildBlock<each C: View>(
+//        c: repeat each c
+//    ) -> TupleView<(repeat each C)> {
+//        return TupleView( (repeat each c))
+//    }
+//}
