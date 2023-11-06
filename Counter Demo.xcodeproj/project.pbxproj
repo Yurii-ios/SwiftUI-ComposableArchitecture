@@ -22,6 +22,7 @@
 		3177FD6628DDAF11002E1103 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6528DDAF11002E1103 /* AppState.swift */; };
 		3177FD6828DDB733002E1103 /* PrimeSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6728DDB733002E1103 /* PrimeSheetView.swift */; };
 		3177FD6C28DDEABE002E1103 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3177FD6B28DDEABE002E1103 /* FavoriteView.swift */; };
+		F11CBF2C2AF95CCA00B5B58B /* ComposableArchitectureTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11CBF2B2AF95CCA00B5B58B /* ComposableArchitectureTestSupport.swift */; };
 		F14B351028ECA02500CA04FD /* Counter.docc in Sources */ = {isa = PBXBuildFile; fileRef = F14B350F28ECA02500CA04FD /* Counter.docc */; };
 		F14B351628ECA02500CA04FD /* Counter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F14B350C28ECA02400CA04FD /* Counter.framework */; };
 		F14B351D28ECA02500CA04FD /* CounterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14B351C28ECA02500CA04FD /* CounterTests.swift */; };
@@ -198,6 +199,7 @@
 		3177FD6728DDB733002E1103 /* PrimeSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimeSheetView.swift; sourceTree = "<group>"; };
 		3177FD6B28DDEABE002E1103 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		3177FD6E28DDEEAB002E1103 /* WolframAlphaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WolframAlphaModel.swift; sourceTree = "<group>"; };
+		F11CBF2B2AF95CCA00B5B58B /* ComposableArchitectureTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposableArchitectureTestSupport.swift; sourceTree = "<group>"; };
 		F14B350C28ECA02400CA04FD /* Counter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Counter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F14B350E28ECA02400CA04FD /* Counter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Counter.h; sourceTree = "<group>"; };
 		F14B350F28ECA02500CA04FD /* Counter.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Counter.docc; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 			isa = PBXGroup;
 			children = (
 				F14B351C28ECA02500CA04FD /* CounterTests.swift */,
+				F11CBF2B2AF95CCA00B5B58B /* ComposableArchitectureTestSupport.swift */,
 			);
 			path = CounterTests;
 			sourceTree = "<group>";
@@ -937,6 +940,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F14B351D28ECA02500CA04FD /* CounterTests.swift in Sources */,
+				F11CBF2C2AF95CCA00B5B58B /* ComposableArchitectureTestSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
