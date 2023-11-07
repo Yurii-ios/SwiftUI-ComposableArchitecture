@@ -10,8 +10,9 @@ import SwiftUI
 import Combine
 import ComposableArchitecture
 import PrimeModel
+import Favoriteprimes
 
-public enum CounterAction {
+public enum CounterAction: Equatable {
     case decrTapped
     case incrTapped
     case nthPrimeButtonTapped
@@ -43,9 +44,10 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
     case .nthPrimeButtonTapped:
         state.isPrimeButtonDisabled = true
         return [
-            nthPrime(state.count)
+            //nthPrime(state.count)
+            Current.nthPrime(state.count)
                 .map(CounterAction.nthPrimeResponce)
-                .receive(on: DispatchQueue.main)
+                .receive(on: DispatchQueue.main, options: nil)
                 .eraseToEffect()
             //            { callback in
             //            nthPrime(counter) { prime in
@@ -78,6 +80,21 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
     }
 }
 
+struct CounterEnvironment {
+    var nthPrime: (Int) -> Effect<Int?>
+}
+
+extension CounterEnvironment {
+    static let live = CounterEnvironment(nthPrime: Counter.nthPrime)
+}
+
+var Current = CounterEnvironment.live
+
+#if DEBUG
+extension CounterEnvironment {
+    static let mock = CounterEnvironment(nthPrime: { _ in  .sync { 17 }})
+}
+#endif
 
 public let counterViewReducer = combine(
     pullback(counterReducer, value: \CounterViewState.counter, action: \CounterViewAction.counter),
@@ -85,7 +102,7 @@ public let counterViewReducer = combine(
 )
 
 // @ObservedObject var state: AppState ->  @ObservedObject var store: Store<AppState>
-public struct CounterViewState {
+public struct CounterViewState: Equatable {
     public var alertPrime: Int?
     public var count: Int
     public var favoritePrimes: [Int]
@@ -109,7 +126,7 @@ public struct CounterViewState {
         }
     }
     
-    public init(alertPrime: Int?, count: Int, favoritePrimes: [Int], isPrimeButtonDisabled: Bool) {
+    public init(alertPrime: Int? = nil, count: Int = 0, favoritePrimes: [Int] = [], isPrimeButtonDisabled: Bool = false) {
         self.alertPrime = alertPrime
         self.count = count
         self.favoritePrimes = favoritePrimes
@@ -117,7 +134,7 @@ public struct CounterViewState {
     }
 }
 
-public enum CounterViewAction {
+public enum CounterViewAction: Equatable {
     case counter(CounterAction)
     case primeModal(PrimeModalAction)
     

@@ -1,10 +1,3 @@
-//
-//  Logging.swift
-//  Counter Demo
-//
-//  Created by Yurii.Semeliuk on 04/10/2022.
-//
-
 import Foundation
 
 //func logging<Value, Action>(
