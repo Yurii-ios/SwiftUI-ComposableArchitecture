@@ -9,13 +9,14 @@ import Foundation
 import Favoriteprimes
 import PrimeModel
 import Counter
+import PrimeAler
 
-struct AppState {
+struct AppState: Equatable {
     var counter = 0
     var favoritePrimes: [Int] = []
     var loggedInUser: User?
     var activityFeed: [Activity] = []
-    var alertPrime: Int? = nil
+    var alertPrime: PrimeAlert? = nil
     var isPrimeButtonDisabled: Bool = false
     
     //var didChange = PassthroughSubject<Void, Never>()
@@ -44,12 +45,21 @@ extension AppState {
 }
 
 extension AppState {
-    var counterView: CounterViewState {
+    var favoritePrimeState: FavoritePrimeState {
         get {
-            CounterViewState(alertPrime: alertPrime, count: counter, favoritePrimes: favoritePrimes, isPrimeButtonDisabled: isPrimeButtonDisabled)
+            (self.alertPrime, self.favoritePrimes)
         }
         set {
-            self.alertPrime  = newValue.alertPrime
+            (self.alertPrime, self.favoritePrimes) = newValue
+        }
+    }
+    
+    var counterView: CounterViewState {
+        get {
+            CounterViewState(alertPrime: alertPrime?.prime, count: counter, favoritePrimes: favoritePrimes, isPrimeButtonDisabled: isPrimeButtonDisabled)
+        }
+        set {
+            self.alertPrime?.prime  = newValue.alertPrime ?? 0
             self.counter = newValue.count
             self.favoritePrimes = newValue.favoritePrimes
             self.isPrimeButtonDisabled = newValue.isPrimeButtonDisabled

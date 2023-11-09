@@ -10,7 +10,6 @@ import SwiftUI
 import Combine
 import ComposableArchitecture
 import PrimeModel
-import Favoriteprimes
 
 public enum CounterAction: Equatable {
     case decrTapped
@@ -26,12 +25,11 @@ public typealias CounterSate = (
     isPrimeButtonDisabled: Bool
 )
 
-public struct PrimeAler: Identifiable {
-    let prime: Int
-    public var id: Int { self.prime }
-}
-
-public func counterReducer(state: inout CounterSate, action: CounterAction) -> [Effect<CounterAction>] {
+public func counterReducer(
+    state: inout CounterSate,
+    action: CounterAction,
+    environment: CounterEnvironment
+) -> [Effect<CounterAction>] {
     switch action {
     case .decrTapped:
         state.count -= 1
@@ -45,7 +43,7 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
         state.isPrimeButtonDisabled = true
         return [
             //nthPrime(state.count)
-            Current.nthPrime(state.count)
+            environment(state.count)
                 .map(CounterAction.nthPrimeResponce)
                 .receive(on: DispatchQueue.main, options: nil)
                 .eraseToEffect()
@@ -80,25 +78,71 @@ public func counterReducer(state: inout CounterSate, action: CounterAction) -> [
     }
 }
 
-struct CounterEnvironment {
-    var nthPrime: (Int) -> Effect<Int?>
+//public struct CounterEnvironment {
+//    var nthPrime: (Int) -> Effect<Int?>
+//}
+
+public typealias CounterEnvironment = (Int) -> Effect<Int?>
+
+//extension CounterEnvironment {
+//    public static let live = CounterEnvironment(nthPrime: Counter.nthPrime)
+//}
+
+//var Current = CounterEnvironment.live
+
+//#if DEBUG
+//extension CounterEnvironment {
+//    static let mock = CounterEnvironment(nthPrime: { _ in  .sync { 17 }})
+//}
+//#endif
+
+public func nthPrime(_ n: Int) -> Effect< Int?> {
+    return wolframAlpha(query: "prime \(n)").map { result in
+        result
+            .flatMap {
+                $0.queryresult
+                    .pods
+                    .first(where: { $0.primary == .some(true) })?
+                    .subpods
+                    .first?
+                    .plaintext
+            }
+            .flatMap(Int.init)
+    }
+    .eraseToEffect()
 }
 
-extension CounterEnvironment {
-    static let live = CounterEnvironment(nthPrime: Counter.nthPrime)
+public func offlineNthPrime(_ n: Int) -> Effect<Int?> {
+  Future { callback in
+    var nthPrime = 1
+    var count = 0
+    while count <= n {
+      nthPrime += 1
+      if isPrime(nthPrime) {
+        count += 1
+      }
+    }
+    callback(.success(nthPrime))
+  }
+  .subscribe(on: DispatchQueue.global())
+  .receive(on: DispatchQueue.main)
+  .eraseToEffect()
 }
 
-var Current = CounterEnvironment.live
 
-#if DEBUG
-extension CounterEnvironment {
-    static let mock = CounterEnvironment(nthPrime: { _ in  .sync { 17 }})
-}
-#endif
-
-public let counterViewReducer = combine(
-    pullback(counterReducer, value: \CounterViewState.counter, action: \CounterViewAction.counter),
-    pullback(primeModalReducer, value: \.primeModal, action: \.primeModal)
+public let counterViewReducer: Reducer<CounterViewState, CounterViewAction, CounterEnvironment> = combine(
+    pullback(
+        counterReducer,
+        value: \CounterViewState.counter,
+        action: \CounterViewAction.counter,
+        environment: { $0 }
+    ),
+    pullback(
+        primeModalReducer,
+        value: \.primeModal,
+        action: \.primeModal,
+        environment: { _ in () }
+    )
 )
 
 // @ObservedObject var state: AppState ->  @ObservedObject var store: Store<AppState>

@@ -1,24 +1,24 @@
 import ComposableArchitecture
 import XCTest
 
-enum StepType {
+public enum StepType {
     case send
     case receive
 }
 
-struct Step<Value, Action> {
+public struct Step<Value, Action> {
     let type: StepType
     let action: Action
     let file: StaticString
     let line: UInt
     let update: (inout Value) -> Void
     
-    init(
+   public init(
         type: StepType,
         _ action: Action,
         file: StaticString = #file,
         line: UInt = #line,
-        _ update: @escaping (inout Value) -> Void) {
+        _ update: @escaping (inout Value) -> Void = { _ in }) {
             self.action = action
             self.update = update
             self.file = file
@@ -26,9 +26,10 @@ struct Step<Value, Action> {
         }
 }
 
-func assert<Value: Equatable, Action: Equatable>(
+public func assert<Value: Equatable, Action: Equatable, Environment>(
     initialValue: Value,
-    reducer: Reducer<Value, Action>,
+    reducer: Reducer<Value, Action, Environment>,
+    environment: Environment,
     steps: Step<Value, Action> ...,
     file: StaticString = #file,
     line: UInt = #line
@@ -42,7 +43,7 @@ func assert<Value: Equatable, Action: Equatable>(
             if !effects.isEmpty {
                 XCTFail("Action sent before handling \(effects.count) pending effect(s)", file: step.file, line: step.line)
             }
-            effects.append(contentsOf: reducer(&state, step.action))
+            effects.append(contentsOf: reducer(&state, step.action, environment))
         case .receive:
             guard !effects.isEmpty else {
                 XCTFail("No pending effects to receive from", file: step.file, line: step.line)
@@ -59,7 +60,7 @@ func assert<Value: Equatable, Action: Equatable>(
                         file: step.file, line: step.line)
             }
             XCTAssertEqual(action, step.action, file: step.file, line: step.line)
-            effects.append(contentsOf: reducer(&state, action))
+            effects.append(contentsOf: reducer(&state, action, environment))
         }
         step.update(&expected)
         XCTAssertEqual(state, expected, file: step.file, line: step.line)

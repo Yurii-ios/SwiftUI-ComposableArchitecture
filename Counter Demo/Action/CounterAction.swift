@@ -10,8 +10,9 @@ import Favoriteprimes
 import Counter
 import PrimeModel
 
-enum AppAction {
+enum AppAction: Equatable {
     case counterView(CounterViewAction)
+    case offlineCounterView(CounterViewAction)
     case favoritePrimes(FavoritePrimeAction)
     
     var counterView: CounterViewAction? {
@@ -33,6 +34,18 @@ enum AppAction {
         set {
             guard case .favoritePrimes = self, let newValue = newValue else { return }
             self = .favoritePrimes(newValue)
+        }
+    }
+    
+    var offlineCounterView: CounterViewAction? {
+        get {
+            guard case let .offlineCounterView(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .favoritePrimes = self, let newValue = newValue else { return }
+                self = .offlineCounterView(newValue)
+
         }
     }
 }

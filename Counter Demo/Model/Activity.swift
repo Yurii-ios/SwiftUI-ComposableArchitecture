@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Activity {
+struct Activity: Equatable {
     let timestamp: Date
     let type: ActivityType
     
-    enum ActivityType {
+    enum ActivityType: Equatable {
         case addedFavoritePrime(Int)
         case removeFavoritePrime(Int)
     }

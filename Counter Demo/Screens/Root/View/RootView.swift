@@ -25,8 +25,17 @@ struct RootView: View {
                             .foregroundColor(.black)
                         
                     }
+                NavigationLink(destination: CounterView(store: store.view(
+                    value: { $0.counterView }, action: { localAction in
+                        AppAction.offlineCounterView(localAction)
+                    }))) {
+                        Text("Offline counter demo")
+                            .font(.body)
+                            .foregroundColor(.black)
+                        
+                    }
                 NavigationLink(destination: FavoriteView(store: store.view(value: { appState in
-                    appState.favoritePrimes
+                    appState.favoritePrimeState
                 }, action: { localAction in
                     AppAction.favoritePrimes(localAction)
                 }))) {
@@ -40,11 +49,11 @@ struct RootView: View {
     }
 }
 
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            RootView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
-                .environmentObject(Store(initialValue: AppState(), reducer: activityFeed(appReducer)))
-        }
-    }
-}
+//struct RootView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            RootView(store: Store(initialValue: AppState(), reducer: activityFeed(appReducer), environment: AppEnvironment(counter: .live, favoritePrimes: .live)))
+//                .environmentObject(Store(initialValue: AppState(), reducer: activityFeed(appReducer), environment: AppEnvironment(counter: .live, favoritePrimes: .live)))
+//        }
+//    }
+//}
