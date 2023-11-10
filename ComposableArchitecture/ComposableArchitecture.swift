@@ -63,11 +63,14 @@ public final class Store<Value, Action>: ObservableObject {
         effects.forEach { effect in
             var effectCancellable:  AnyCancellable?
             var didComplete: Bool = false
-            effectCancellable = effect.sink(receiveCompletion: { [weak self] _ in
+            effectCancellable = effect.sink(receiveCompletion: { [weak self, weak effectCancellable] _ in
                 didComplete = true
                 guard let effectCancellable = effectCancellable else { return }
                 self?.effectCancellables.remove(effectCancellable)
-            },receiveValue: send)
+            },receiveValue: { [weak self] in
+                self?.send($0)
+            }
+            )
             
             if !didComplete, let effectCancellable = effectCancellable {
                 effectCancellables.insert(effectCancellable)
