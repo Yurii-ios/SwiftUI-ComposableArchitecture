@@ -33,24 +33,32 @@ public struct Effect<Output>: Publisher {
     }
 }
 
-public typealias Reducer<Value, Action> = (inout Value, Action) -> [Effect<Action>]
+public typealias Reducer<Value, Action, Environment> = (inout Value, Action, Environment) -> [Effect<Action>]
 
 public final class Store<Value, Action>: ObservableObject {
-    private let reducer: Reducer<Value, Action>
+    private let reducer: Reducer<Value, Action, Void>
+    private let environment: Any
     @Published public private(set) var value: Value
     private var viewCancellable: Cancellable?
     private var effectCancellables: Set<AnyCancellable> = []
     
-    public init(initialValue: Value, reducer: @escaping Reducer<Value, Action>) {
+    public init<Environment>(
+        initialValue: Value,
+        reducer: @escaping Reducer<Value, Action, Environment>,
+        environment: Environment
+    ) {
         // self.objectWillChange // ObservableObjectPublisher
         // self.$value // Published<Value>.Publisher
         // self.$value.sink(receiveValue: ((Value) -> Void))
         self.value = initialValue
-        self.reducer = reducer
+        self.reducer = { value, action, _ in
+            reducer(&value, action, environment)
+        }
+        self.environment = environment
     }
     
     public func send(_ action: Action) {
-        let effects = reducer(&value, action)
+        let effects = reducer(&value, action, ())
         
         effects.forEach { effect in
             var effectCancellable:  AnyCancellable?
@@ -80,19 +88,24 @@ public final class Store<Value, Action>: ObservableObject {
     // ((A) -> B) -> ((Store<A, _>) -> Store<B, _>)
     // ((A) -> B) -> ((F<A>) -> F<B>)
     // map: ((A) -> B) -> ((F<A>) -> F<B>)
-    public func view<LocalValue, LocalAction>(value toLocalValue: @escaping (Value) -> LocalValue, action toGlobalAction: @escaping(LocalAction) -> Action) -> Store<LocalValue, LocalAction> {
-        let localStore = Store<LocalValue, LocalAction>(initialValue: toLocalValue(self.value), reducer: { localValue, localAction in
+    public func view<LocalValue, LocalAction>(
+        value toLocalValue: @escaping (Value) -> LocalValue,
+        action toGlobalAction: @escaping (LocalAction) -> Action
+      ) -> Store<LocalValue, LocalAction> {
+        let localStore = Store<LocalValue, LocalAction>(
+          initialValue: toLocalValue(self.value),
+          reducer: { localValue, localAction, _ in
             self.send(toGlobalAction(localAction))
             localValue = toLocalValue(self.value)
             return []
-        })
-        
+        },
+          environment: ()
+        )
         localStore.viewCancellable = self.$value.sink { [weak localStore] newValue in
-            localStore?.value = toLocalValue(newValue)
+          localStore?.value = toLocalValue(newValue)
         }
-        
         return localStore
-    }
+      }
     
     // ((LocalAction) -> Action) -> ((Store<_, Action>) -> Store<_, LocalAction>)
     // ((B) -> A) -> ((Store<A, _>) -> Store<B, _>)
@@ -114,17 +127,17 @@ func transform<A, B, Action>(
     fatalError()
 }
 
-public func combine<Value, Action>(
-    _ reducers: Reducer<Value, Action>...
-) -> Reducer<Value, Action> {
+public func combine<Value, Action, Environment>(
+    _ reducers: Reducer<Value, Action, Environment>...
+) -> Reducer<Value, Action, Environment> {
     
-    return { value, action in
+    return { value, action, environment in
         //        var effects: [Effect] = []
         //        for reducer in reducers {
         //            let effect = reducer(&value, action)
         //            effects.append(effect)
         //        }
-        let effects = reducers.flatMap{ $0(&value, action) }
+        let effects = reducers.flatMap{ $0(&value, action, environment) }
         return effects
         //        return { () -> Action? in
         //            for effect in effects {
@@ -135,29 +148,34 @@ public func combine<Value, Action>(
     }
 }
 
-public func logging<Value, Action>(
-    _ reducer: @escaping Reducer<Value, Action>
-) -> Reducer<Value, Action> {
-    return { value, action in
-        let effects = reducer(&value, action)
-        let newValue = value
-        return [ .fireAndForget {
-            print("Action: \(action)")
-            print("Value:")
-            dump(newValue)
-            print("---")
-        }.eraseToEffect()] + effects
-    }
+public func logging<Value, Action, Environment>(
+  _ reducer: @escaping Reducer<Value, Action, Environment>,
+  logger: @escaping (Environment) -> (String) -> Void
+) -> Reducer<Value, Action, Environment> {
+  return { value, action, environment in
+    let effects = reducer(&value, action, environment)
+    let newValue = value
+    return [.fireAndForget {
+      let print = logger(environment)
+      print("Action: \(action)")
+      print("Value:")
+      var dumpedValue = ""
+      dump(newValue, to: &dumpedValue)
+      print(dumpedValue)
+      print("---")
+      }] + effects
+  }
 }
 
-public func pullback<LocalValue, GlobalValue, LocalAction, GlobalAction>(
-    _ reducer: @escaping Reducer<LocalValue, LocalAction>,
+public func pullback<LocalValue, GlobalValue, LocalAction, GlobalAction, LocalEnvironment, GlobalEnvironment>(
+    _ reducer: @escaping Reducer<LocalValue, LocalAction, LocalEnvironment>,
     value: WritableKeyPath<GlobalValue, LocalValue>,
-    action: WritableKeyPath<GlobalAction, LocalAction?>
-) -> Reducer<GlobalValue, GlobalAction> {
-    return { globalValue, globalAction in
+    action: WritableKeyPath<GlobalAction, LocalAction?>,
+    environment: @escaping(GlobalEnvironment) -> LocalEnvironment
+) -> Reducer<GlobalValue, GlobalAction, GlobalEnvironment> {
+    return { globalValue, globalAction, globalEnvironment in
         guard let localAction = globalAction[keyPath: action] else { return [] }
-        let localEffects = reducer(&globalValue[keyPath: value], localAction)
+        let localEffects = reducer(&globalValue[keyPath: value], localAction, environment(globalEnvironment))
         
         return localEffects.map { localEffect in
             localEffect.map { localAction -> GlobalAction in

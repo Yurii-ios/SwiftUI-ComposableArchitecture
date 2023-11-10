@@ -27,7 +27,11 @@ public enum PrimeModalAction: Equatable {
     case removeFavoritePrimeTapped
 }
 
-public func primeModalReducer(state: inout PrimeModalState, action: PrimeModalAction) -> [Effect<PrimeModalAction>] {
+public func primeModalReducer(
+    state: inout PrimeModalState,
+    action: PrimeModalAction,
+    environment: Void
+) -> [Effect<PrimeModalAction>] {
     switch action {
     case .saveFavoritesPrimeTapped:
         state.favoritePrimes.append(state.counter)
@@ -37,6 +41,16 @@ public func primeModalReducer(state: inout PrimeModalState, action: PrimeModalAc
         state.favoritePrimes.removeAll(where: { $0 == state.counter })
         return []
     }
+}
+
+public func isPrime(_ number: Int) -> Bool {
+    if number <= 1 { return false }
+    if number <= 3 { return true }
+    
+    for i in 2...Int(sqrtf(Float(number))) {
+        if number % i == 0 { return false }
+    }
+    return true
 }
 
 public struct PrimeSheetView: View {
@@ -73,15 +87,5 @@ public struct PrimeSheetView: View {
                 Text("\(store.value.counter) is not prime")
             }
         }
-    }
-    
-    private func isPrime(_ number: Int) -> Bool {
-        if number <= 1 { return false }
-        if number <= 3 { return true }
-        
-        for i in 2...Int(sqrtf(Float(number))) {
-            if number % i == 0 { return false }
-        }
-        return true
     }
 }
