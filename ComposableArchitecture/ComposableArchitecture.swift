@@ -35,10 +35,39 @@ public struct Effect<Output>: Publisher {
 
 public typealias Reducer<Value, Action, Environment> = (inout Value, Action, Environment) -> [Effect<Action>]
 
-public final class Store<Value, Action>: ObservableObject {
+public final class ViewStore<Value>: ObservableObject {
+    @Published public fileprivate(set) var value: Value
+    fileprivate var cancellable: Cancellable?
+    
+   public init(value: Value) {
+        self.value = value
+    }
+}
+
+extension Store where Value: Equatable {
+    public var view: ViewStore<Value> {
+        self.view(removeDuplicates: ==)
+    }
+}
+
+extension Store {
+    public func view(removeDuplicates predicate: @escaping (Value, Value) -> Bool) -> ViewStore<Value> {
+       let viewStore = ViewStore(value: self.value)
+        
+        viewStore.cancellable = self.$value
+            .removeDuplicates(by: predicate)
+            .sink { [weak viewStore] value in
+            viewStore?.value = value
+                self
+        }
+        return viewStore
+    }
+}
+
+public final class Store<Value, Action> /*: ObservableObject*/ {
     private let reducer: Reducer<Value, Action, Void>
     private let environment: Any
-    @Published public private(set) var value: Value
+    @Published  private var value: Value
     private var viewCancellable: Cancellable?
     private var effectCancellables: Set<AnyCancellable> = []
     
@@ -91,7 +120,7 @@ public final class Store<Value, Action>: ObservableObject {
     // ((A) -> B) -> ((Store<A, _>) -> Store<B, _>)
     // ((A) -> B) -> ((F<A>) -> F<B>)
     // map: ((A) -> B) -> ((F<A>) -> F<B>)
-    public func view<LocalValue, LocalAction>(
+    public func scope<LocalValue, LocalAction>(
         value toLocalValue: @escaping (Value) -> LocalValue,
         action toGlobalAction: @escaping (LocalAction) -> Action
       ) -> Store<LocalValue, LocalAction> {
@@ -104,8 +133,11 @@ public final class Store<Value, Action>: ObservableObject {
         },
           environment: ()
         )
-        localStore.viewCancellable = self.$value.sink { [weak localStore] newValue in
-          localStore?.value = toLocalValue(newValue)
+        localStore.viewCancellable = self.$value
+              .map(toLocalValue)
+              //.removeDuplicates()
+              .sink { [weak localStore] newValue in
+          localStore?.value = newValue
         }
         return localStore
       }

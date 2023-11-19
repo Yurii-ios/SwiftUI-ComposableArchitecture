@@ -54,17 +54,25 @@ public func isPrime(_ number: Int) -> Bool {
 }
 
 public struct PrimeSheetView: View {
-    @ObservedObject var store: Store<PrimeModalState, PrimeModalAction>
+    struct States: Equatable {
+        let counter: Int
+        let isFavorite: Bool
+    }
+    let store: Store<PrimeModalState, PrimeModalAction>
+    @ObservedObject var viewStore: ViewStore<States>
     
     public init(store: Store<PrimeModalState, PrimeModalAction>) {
         self.store = store
+        self.viewStore = self.store
+            .scope(value: States.init(primeModelState: ), action: { $0 })
+            .view
     }
     
     public var body: some View {
         VStack {
-            if isPrime(store.value.counter) {
-                Text("\(store.value.counter) is prime")
-                if store.value.favoritePrimes.contains(store.value.counter) {
+            if isPrime(viewStore.value.counter) {
+                Text("\(viewStore.value.counter) is prime")
+                if viewStore.value.isFavorite {
                     Button(action: {
                         store.send(.removeFavoritePrimeTapped)
                         // store.value.removeFavoritePrime(store.value.counter)
@@ -84,8 +92,15 @@ public struct PrimeSheetView: View {
                     .buttonStyle(.automatic)
                 }
             } else {
-                Text("\(store.value.counter) is not prime")
+                Text("\(viewStore.value.counter) is not prime")
             }
         }
+    }
+}
+
+extension PrimeSheetView.States {
+    init(primeModelState state: PrimeModalState) {
+        self.counter = state.counter
+        self.isFavorite = state.favoritePrimes.contains(state.counter)
     }
 }

@@ -11,12 +11,12 @@ import Favoriteprimes
 import Counter
 
 struct RootView: View {
-    @ObservedObject var store: Store<AppState, AppAction>
+   let store: Store<AppState, AppAction>
     
     var body: some View {
         NavigationView {
             List {
-                NavigationLink(destination: CounterView(store: store.view(
+                NavigationLink(destination: CounterView(store: store.scope(
                     value: { $0.counterView }, action: { localAction in
                         AppAction.counterView(localAction)
                     }))) {
@@ -25,7 +25,7 @@ struct RootView: View {
                             .foregroundColor(.black)
                         
                     }
-                NavigationLink(destination: CounterView(store: store.view(
+                NavigationLink(destination: CounterView(store: store.scope(
                     value: { $0.counterView }, action: { localAction in
                         AppAction.offlineCounterView(localAction)
                     }))) {
@@ -34,7 +34,7 @@ struct RootView: View {
                             .foregroundColor(.black)
                         
                     }
-                NavigationLink(destination: FavoriteView(store: store.view(value: { appState in
+                NavigationLink(destination: FavoriteView(store: store.scope(value: { appState in
                     appState.favoritePrimeState
                 }, action: { localAction in
                     AppAction.favoritePrimes(localAction)

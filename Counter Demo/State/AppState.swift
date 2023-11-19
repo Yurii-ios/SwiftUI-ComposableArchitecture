@@ -54,9 +54,9 @@ extension AppState {
         }
     }
     
-    var counterView: CounterViewState {
+    var counterView: CounterFeatureState {
         get {
-            CounterViewState(alertPrime: alertPrime?.prime, count: counter, favoritePrimes: favoritePrimes, isPrimeButtonDisabled: isPrimeButtonDisabled)
+            CounterFeatureState(alertPrime: alertPrime?.prime, count: counter, favoritePrimes: favoritePrimes, isPrimeButtonDisabled: isPrimeButtonDisabled)
         }
         set {
             self.alertPrime?.prime  = newValue.alertPrime ?? 0

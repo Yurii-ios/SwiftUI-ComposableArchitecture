@@ -26,7 +26,7 @@ final class CounterTests: XCTestCase {
     
     func testIncrementDecrementButtonTapped() throws {
         assert(
-            initialValue: CounterViewState(count: 2),
+            initialValue: CounterFeatureState(count: 2),
             reducer: counterViewReducer,
             environment: { _ in .sync { 17 }},
             steps:
@@ -59,7 +59,7 @@ final class CounterTests: XCTestCase {
 //        } }
 //
         assert(
-            initialValue: CounterViewState(
+            initialValue: CounterFeatureState(
                 alertPrime: nil, isPrimeButtonDisabled: false
             ),
             reducer: counterReducer,
@@ -119,7 +119,7 @@ final class CounterTests: XCTestCase {
         //Current.nthPrime = { _ in .sync { nil }}
         
         assert(
-            initialValue: CounterViewState(
+            initialValue: CounterFeatureState(
                 alertPrime: nil,
                 isPrimeButtonDisabled: false
             ),
@@ -178,7 +178,7 @@ final class CounterTests: XCTestCase {
     
     func testPrimeModal() {
         assert(
-            initialValue: CounterViewState(
+            initialValue: CounterFeatureState(
                 count: 2,
                 favoritePrimes: [3, 5]
             ),
